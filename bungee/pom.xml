@@ -7,7 +7,7 @@
     <parent>
         <groupId>net.byteflux</groupId>
         <artifactId>libby</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>0.0.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>libby-bungee</artifactId>
@@ -23,12 +23,12 @@
         <dependency>
             <groupId>net.byteflux</groupId>
             <artifactId>libby-core</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>0.0.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
-            <version>1.14-SNAPSHOT</version>
+            <version>1.15-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

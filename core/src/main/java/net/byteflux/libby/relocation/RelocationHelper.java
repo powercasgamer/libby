@@ -52,8 +52,8 @@ public class RelocationHelper {
             Library.builder()
                    .groupId("org.ow2.asm")
                    .artifactId("asm-commons")
-                   .version("6.0")
-                   .checksum("8bzlxkipagF73NAf5dWa+YRSl/17ebgcAVpvu9lxmr8=")
+                   .version("7.1")
+                   .checksum("5VkEidjxmE2Fv+q9Oxc3TFnCiuCdSOxKDrvQGVns01g=")
                    .build()
         ));
 
@@ -62,8 +62,8 @@ public class RelocationHelper {
             Library.builder()
                    .groupId("org.ow2.asm")
                    .artifactId("asm")
-                   .version("6.0")
-                   .checksum("3Ylxx0pOaXiZqOlcquTqh2DqbEhtxrl7F5XnV2BCBGE=")
+                   .version("7.1")
+                   .checksum("SrL6K20sycyx6qBeoynEB7R7E+0pFfYvjEuMyWJY1N4=")
                    .build()
         ));
 
@@ -72,8 +72,8 @@ public class RelocationHelper {
             Library.builder()
                    .groupId("me.lucko")
                    .artifactId("jar-relocator")
-                   .version("1.3")
-                   .checksum("mmz3ltQbS8xXGA2scM0ZH6raISlt4nukjCiU2l9Jxfs=")
+                   .version("1.4")
+                   .checksum("1RsiF3BiVztjlfTA+svDCuoDSGFuSpTZYHvUK8yBx8I=")
                    .build()
         ));
 

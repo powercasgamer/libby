@@ -7,7 +7,7 @@
     <parent>
         <groupId>net.byteflux</groupId>
         <artifactId>libby</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>0.0.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>libby-bukkit</artifactId>
@@ -23,12 +23,12 @@
         <dependency>
             <groupId>net.byteflux</groupId>
             <artifactId>libby-core</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>0.0.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.12.2-R0.1-SNAPSHOT</version>
+            <version>1.15.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

@@ -7,7 +7,7 @@
     <parent>
         <groupId>net.byteflux</groupId>
         <artifactId>libby</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>0.0.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>libby-velocity</artifactId>
@@ -23,17 +23,17 @@
         <dependency>
             <groupId>net.byteflux</groupId>
             <artifactId>libby-core</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>0.0.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.byteflux</groupId>
             <artifactId>libby-slf4j</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>0.0.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.velocitypowered</groupId>
             <artifactId>velocity-api</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>1.0.8-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

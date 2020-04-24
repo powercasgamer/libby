@@ -6,7 +6,7 @@
 
     <groupId>net.byteflux</groupId>
     <artifactId>libby</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -50,7 +50,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.1.0</version>
+                        <version>3.2.1</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -64,12 +64,12 @@
             </build>
             <distributionManagement>
                 <repository>
-                    <id>byteflux-releases</id>
-                    <url>https://repo.byteflux.net/repository/maven-releases/</url>
+                    <id>codemc-releases</id>
+                    <url>https://repo.codemc.io/repository/maven-releases/</url>
                 </repository>
                 <snapshotRepository>
-                    <id>byteflux-snapshots</id>
-                    <url>https://repo.byteflux.net/repository/maven-snapshots/</url>
+                    <id>codemc-snapshots</id>
+                    <url>https://repo.codemc.io/repository/maven-snapshots/</url>
                 </snapshotRepository>
             </distributionManagement>
         </profile>
