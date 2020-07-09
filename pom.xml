@@ -49,12 +49,14 @@
 
     <distributionManagement>
         <repository>
-            <id>codemc-releases</id>
-            <url>https://repo.codemc.io/repository/maven-releases/</url>
+            <id>alessiodp-repo</id>
+            <name>AlessioDP repository</name>
+            <url>https://repo.alessiodp.com/releases/</url>
         </repository>
         <snapshotRepository>
-            <id>codemc-snapshots</id>
-            <url>https://repo.codemc.io/repository/maven-snapshots/</url>
+            <id>alessiodp-repo</id>
+            <name>AlessioDP repository</name>
+            <url>https://repo.alessiodp.com/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -80,12 +82,14 @@
             </build>
             <distributionManagement>
                 <repository>
-                    <id>codemc-releases</id>
-                    <url>https://repo.codemc.io/repository/maven-releases/</url>
+                    <id>alessiodp-repo</id>
+                    <name>AlessioDP repository</name>
+                    <url>https://repo.alessiodp.com/releases/</url>
                 </repository>
                 <snapshotRepository>
-                    <id>codemc-snapshots</id>
-                    <url>https://repo.codemc.io/repository/maven-snapshots/</url>
+                    <id>alessiodp-repo</id>
+                    <name>AlessioDP repository</name>
+                    <url>https://repo.alessiodp.com/snapshots/</url>
                 </snapshotRepository>
             </distributionManagement>
         </profile>
