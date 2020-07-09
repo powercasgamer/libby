@@ -6,6 +6,7 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 
@@ -20,6 +21,11 @@ public class Library {
      * Direct download URLs for this library
      */
     private final Collection<String> urls;
+
+    /**
+     * Library id (used by Isolated Class Loaders)
+     */
+    private final String id;
 
     /**
      * Maven group ID
@@ -62,9 +68,15 @@ public class Library {
     private final String relocatedPath;
 
     /**
+     * Should this library be loaded in an isolated class loader?
+     */
+    private final boolean isolatedLoad;
+
+    /**
      * Creates a new library.
      *
      * @param urls        direct download URLs
+     * @param id          library ID
      * @param groupId     Maven group ID
      * @param artifactId  Maven artifact ID
      * @param version     artifact version
@@ -73,14 +85,17 @@ public class Library {
      * @param relocations jar relocations or null
      */
     private Library(Collection<String> urls,
+                    String id,
                     String groupId,
                     String artifactId,
                     String version,
                     String classifier,
                     byte[] checksum,
-                    Collection<Relocation> relocations) {
+                    Collection<Relocation> relocations,
+                    boolean isolatedLoad) {
 
         this.urls = urls != null ? Collections.unmodifiableList(new LinkedList<>(urls)) : Collections.emptyList();
+        this.id = id != null ? id : UUID.randomUUID().toString();
         this.groupId = requireNonNull(groupId, "groupId").replace("{}", ".");
         this.artifactId = requireNonNull(artifactId, "artifactId");
         this.version = requireNonNull(version, "version");
@@ -95,6 +110,7 @@ public class Library {
 
         this.path = path + ".jar";
         relocatedPath = hasRelocations() ? path + "-relocated.jar" : null;
+        this.isolatedLoad = isolatedLoad;
     }
 
     /**
@@ -105,6 +121,13 @@ public class Library {
     public Collection<String> getUrls() {
         return urls;
     }
+
+    /**
+     * Gets the library ID
+     *
+     * @return the library id
+     */
+    public String getId() {return id;}
 
     /**
      * Gets the Maven group ID for this library.
@@ -206,6 +229,13 @@ public class Library {
     }
 
     /**
+     * Is the library loaded isolated?
+     *
+     * @return true if the library is loaded isolated
+     */
+    public boolean isIsolatedLoad() {return isolatedLoad;}
+
+    /**
      * Gets a concise, human-readable string representation of this library.
      *
      * @return string representation
@@ -241,6 +271,11 @@ public class Library {
         private final Collection<String> urls = new LinkedList<>();
 
         /**
+         * The library ID
+         */
+        private String id;
+
+        /**
          * Maven group ID
          */
         private String groupId;
@@ -266,6 +301,11 @@ public class Library {
         private byte[] checksum;
 
         /**
+         * Isolated load
+         */
+        private boolean isolatedLoad;
+
+        /**
          * Jar relocations to apply
          */
         private final Collection<Relocation> relocations = new LinkedList<>();
@@ -278,6 +318,17 @@ public class Library {
          */
         public Builder url(String url) {
             urls.add(requireNonNull(url, "url"));
+            return this;
+        }
+
+        /**
+         * Sets the id for this library.
+         *
+         * @param id the ID
+         * @return this builder
+         */
+        public Builder id(String id) {
+            this.id = id != null ? id : UUID.randomUUID().toString();
             return this;
         }
 
@@ -347,6 +398,17 @@ public class Library {
         }
 
         /**
+         * Sets the isolated load for this library.
+         *
+         * @param isolatedLoad the isolated load boolean
+         * @return this builder
+         */
+        public Builder isolatedLoad(boolean isolatedLoad) {
+            this.isolatedLoad = isolatedLoad;
+            return this;
+        }
+
+        /**
          * Adds a jar relocation to apply to this library.
          *
          * @param relocation jar relocation to apply
@@ -374,7 +436,7 @@ public class Library {
          * @return new library
          */
         public Library build() {
-            return new Library(urls, groupId, artifactId, version, classifier, checksum, relocations);
+            return new Library(urls, id, groupId, artifactId, version, classifier, checksum, relocations, isolatedLoad);
         }
     }
 }

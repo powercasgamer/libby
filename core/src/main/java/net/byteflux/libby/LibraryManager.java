@@ -1,5 +1,6 @@
 package net.byteflux.libby;
 
+import net.byteflux.libby.classloader.IsolatedClassLoader;
 import net.byteflux.libby.logging.LogLevel;
 import net.byteflux.libby.logging.Logger;
 import net.byteflux.libby.logging.adapters.LogAdapter;
@@ -25,8 +26,10 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
@@ -69,6 +72,11 @@ public abstract class LibraryManager {
     private RelocationHelper relocator;
 
     /**
+     * Map of isolated class loaders and theirs id
+     */
+    private final Map<String, IsolatedClassLoader> isolatedLibraries = new HashMap<>();
+
+    /**
      * Creates a new library manager.
      *
      * @param logAdapter    plugin logging adapter
@@ -85,6 +93,26 @@ public abstract class LibraryManager {
      * @param file the file to add
      */
     protected abstract void addToClasspath(Path file);
+
+    /**
+     * Adds a file to the isolated class loader
+     * @param library the library to add
+     * @param file the file to add
+     */
+    protected void addToIsolatedClasspath(Library library, Path file) {
+        IsolatedClassLoader classLoader = new IsolatedClassLoader();
+        classLoader.addPath(file);
+        isolatedLibraries.put(library.getId(), classLoader);
+    }
+
+    /**
+     * Get the isolated class loader of the library
+     *
+     * @param libraryId the id of the library
+     */
+    public IsolatedClassLoader getIsolatedClassLoaderOf(String libraryId) {
+        return isolatedLibraries.get(libraryId);
+    }
 
     /**
      * Gets the logging level for this library manager.
@@ -387,6 +415,10 @@ public abstract class LibraryManager {
             file = relocate(file, library.getRelocatedPath(), library.getRelocations());
         }
 
-        addToClasspath(file);
+        if (library.isIsolatedLoad()) {
+            addToIsolatedClasspath(library, file);
+        } else {
+            addToClasspath(file);
+        }
     }
 }
