@@ -1,4 +1,16 @@
-# Libby
+# Libby (AlessioDP)
+
+## Changes in this fork
+
+* Libraries can be loaded from an `IsolatedClassLoader`
+    * Use `LibraryManager.getIsolatedClassLoaderOf(...)` to get the `IsolatedClassLoader` via its `id`
+    * Use `Library.id(...)` to set an ID to the library
+    * Use `Library.isolatedLoad(...)` to load it via `IsolatedClassLoader`
+* Libraries are updated
+* Distribution management to repo.alessiodp.com
+
+
+# Libby 
 
 A runtime dependency management library for plugins running in Java-based Minecraft
 server platforms.
