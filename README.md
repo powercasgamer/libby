@@ -7,6 +7,7 @@
     * Use `Library.id(...)` to set an ID to the library
     * Use `Library.isolatedLoad(...)` to load it via `IsolatedClassLoader`
 * Libraries are updated
+* Support for Java 9+ Modules to prevent deprecations
 * Distribution management to repo.alessiodp.com
 
 

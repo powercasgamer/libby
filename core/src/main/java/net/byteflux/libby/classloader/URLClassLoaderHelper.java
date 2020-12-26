@@ -33,6 +33,11 @@ public class URLClassLoaderHelper {
         this.classLoader = requireNonNull(classLoader, "classLoader");
 
         try {
+            try {
+                // Java 9+
+                openUrlClassLoaderModule();
+            } catch (Exception ignored) {}
+
             addURLMethod = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
             addURLMethod.setAccessible(true);
         } catch (NoSuchMethodException e) {
@@ -64,5 +69,31 @@ public class URLClassLoaderHelper {
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException(e);
         }
+    }
+
+    private static void openUrlClassLoaderModule() throws Exception {
+        //
+        // Thanks to lucko (Luck) <luck@lucko.me> for this snippet used in his own class loader
+        //
+        // This is a workaround used to maintain Java 9+ support with reflections
+        // Thanks to this you will be able to run this class loader with Java 8+
+
+        // This is effectively calling:
+        //
+        // URLClassLoader.class.getModule().addOpens(
+        //     URLClassLoader.class.getPackageName(),
+        //     ReflectionClassLoader.class.getModule()
+        // );
+        //
+        // We use reflection since we build against Java 8.
+
+        Class<?> moduleClass = Class.forName("java.lang.Module");
+        Method getModuleMethod = Class.class.getMethod("getModule");
+        Method addOpensMethod = moduleClass.getMethod("addOpens", String.class, moduleClass);
+
+        Object urlClassLoaderModule = getModuleMethod.invoke(URLClassLoader.class);
+        Object thisModule = getModuleMethod.invoke(URLClassLoaderHelper.class);
+
+        addOpensMethod.invoke(urlClassLoaderModule, URLClassLoader.class.getPackage().getName(), thisModule);
     }
 }
