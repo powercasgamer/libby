@@ -88,6 +88,18 @@ public abstract class LibraryManager {
     }
 
     /**
+     * Creates a new library manager.
+     *
+     * @param logAdapter    plugin logging adapter
+     * @param dataDirectory plugin's data directory
+     * @param directoryName download directory name
+     */
+    protected LibraryManager(LogAdapter logAdapter, Path dataDirectory, String directoryName) {
+        logger = new Logger(requireNonNull(logAdapter, "logAdapter"));
+        saveDirectory = requireNonNull(dataDirectory, "dataDirectory").toAbsolutePath().resolve(requireNonNull(directoryName, "directoryName"));
+    }
+
+    /**
      * Adds a file to the plugin's classpath.
      *
      * @param file the file to add

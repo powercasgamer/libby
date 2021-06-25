@@ -24,7 +24,17 @@ public class BungeeLibraryManager extends LibraryManager {
      * @param plugin the plugin to manage
      */
     public BungeeLibraryManager(Plugin plugin) {
-        super(new JDKLogAdapter(requireNonNull(plugin, "plugin").getLogger()), plugin.getDataFolder().toPath());
+        this(plugin, "lib");
+    }
+
+    /**
+     * Creates a new Bungee library manager.
+     *
+     * @param plugin the plugin to manage
+     * @param directoryName download directory name
+     */
+    public BungeeLibraryManager(Plugin plugin, String directoryName) {
+        super(new JDKLogAdapter(requireNonNull(plugin, "plugin").getLogger()), plugin.getDataFolder().toPath(), directoryName);
         classLoader = new URLClassLoaderHelper((URLClassLoader) plugin.getClass().getClassLoader());
     }
 
