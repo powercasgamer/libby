@@ -2,6 +2,8 @@
 
 ## Changes in this fork
 
+### Version 1.1.0
+
 * Libraries can be loaded from an `IsolatedClassLoader`
     * Use `LibraryManager.getIsolatedClassLoaderOf(...)` to get the `IsolatedClassLoader` via its `id`
     * Use `Library.id(...)` to set an ID to the library
@@ -10,6 +12,11 @@
 * Support for Java 9+ Modules to prevent deprecations
 * Distribution management to repo.alessiodp.com
 
+### Version 1.1.1
+
+* Download directory name can now be changed when instantiating the LibraryManager
+* When loading a library with `Library.isolatedLoad(true).id(aId)` and an IsolatedClassLoader with id `aId` is present
+  it will be used instead of creating a new one
 
 # Libby 
 
