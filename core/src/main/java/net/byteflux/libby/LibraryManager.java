@@ -96,13 +96,19 @@ public abstract class LibraryManager {
 
     /**
      * Adds a file to the isolated class loader
+     *
      * @param library the library to add
      * @param file the file to add
      */
     protected void addToIsolatedClasspath(Library library, Path file) {
-        IsolatedClassLoader classLoader = new IsolatedClassLoader();
+        IsolatedClassLoader classLoader;
+        String id = library.getId();
+        if (id != null) {
+            classLoader = isolatedLibraries.computeIfAbsent(id, s -> new IsolatedClassLoader());
+        } else {
+            classLoader = new IsolatedClassLoader();
+        }
         classLoader.addPath(file);
-        isolatedLibraries.put(library.getId(), classLoader);
     }
 
     /**
