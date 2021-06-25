@@ -81,7 +81,10 @@ public abstract class LibraryManager {
      *
      * @param logAdapter    plugin logging adapter
      * @param dataDirectory plugin's data directory
+     *
+     * @deprecated Use {@link LibraryManager#LibraryManager(LogAdapter, Path, String)}
      */
+    @Deprecated
     protected LibraryManager(LogAdapter logAdapter, Path dataDirectory) {
         logger = new Logger(requireNonNull(logAdapter, "logAdapter"));
         saveDirectory = requireNonNull(dataDirectory, "dataDirectory").toAbsolutePath().resolve("lib");
