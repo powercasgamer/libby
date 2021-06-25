@@ -24,7 +24,17 @@ public class NukkitLibraryManager extends LibraryManager {
      * @param plugin the plugin to manage
      */
     public NukkitLibraryManager(Plugin plugin) {
-        super(new NukkitLogAdapter(requireNonNull(plugin, "plugin").getLogger()), plugin.getDataFolder().toPath());
+        this(plugin, "lib");
+    }
+
+    /**
+     * Creates a new Nukkit library manager.
+     *
+     * @param plugin the plugin to manage
+     * @param directoryName download directory name
+     */
+    public NukkitLibraryManager(Plugin plugin, String directoryName) {
+        super(new NukkitLogAdapter(requireNonNull(plugin, "plugin").getLogger()), plugin.getDataFolder().toPath(), directoryName);
         classLoader = new URLClassLoaderHelper((URLClassLoader) plugin.getClass().getClassLoader());
     }
 

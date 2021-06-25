@@ -29,7 +29,20 @@ public class SpongeLibraryManager<T> extends LibraryManager {
      */
     @Inject
     private SpongeLibraryManager(Logger logger, @ConfigDir(sharedRoot = false) Path dataDirectory, T plugin) {
-        super(new SLF4JLogAdapter(logger), dataDirectory);
+        this(logger, dataDirectory, plugin, "lib");
+    }
+
+    /**
+     * Creates a new Sponge library manager.
+     *
+     * @param logger        the plugin logger
+     * @param dataDirectory plugin's data directory
+     * @param plugin        the plugin to manage
+     * @param directoryName download directory name
+     */
+    @Inject
+    private SpongeLibraryManager(Logger logger, @ConfigDir(sharedRoot = false) Path dataDirectory, T plugin, String directoryName) {
+        super(new SLF4JLogAdapter(logger), dataDirectory, directoryName);
         classLoader = new URLClassLoaderHelper((URLClassLoader) requireNonNull(plugin, "plugin").getClass().getClassLoader());
     }
 
