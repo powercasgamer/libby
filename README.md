@@ -18,6 +18,11 @@
 * When loading a library with `Library.isolatedLoad(true).id(aId)` and an IsolatedClassLoader with id `aId` is present
   it will be used instead of creating a new one
 
+### Version 1.1.2
+
+* Add support for libraries compiled with Java 16
+* Updated libraries used by Libby
+
 # Libby 
 
 A runtime dependency management library for plugins running in Java-based Minecraft
