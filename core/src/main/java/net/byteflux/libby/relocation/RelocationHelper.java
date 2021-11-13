@@ -2,6 +2,7 @@ package net.byteflux.libby.relocation;
 
 import net.byteflux.libby.Library;
 import net.byteflux.libby.LibraryManager;
+import net.byteflux.libby.Repositories;
 import net.byteflux.libby.classloader.IsolatedClassLoader;
 
 import java.io.File;
@@ -54,6 +55,7 @@ public class RelocationHelper {
                    .artifactId("asm-commons")
                    .version("9.2")
                    .checksum("vkzlMTiiOLtSLNeBz5Hzulzi9sqT7GLUahYqEnIl4KY=")
+                   .repository(Repositories.MAVEN_CENTRAL)
                    .build()
         ));
 
@@ -64,6 +66,7 @@ public class RelocationHelper {
                    .artifactId("asm")
                    .version("9.2")
                    .checksum("udT+TXGTjfOIOfDspCqqpkz4sxPWeNoDbwyzyhmbR/U=")
+                   .repository(Repositories.MAVEN_CENTRAL)
                    .build()
         ));
 
@@ -74,6 +77,7 @@ public class RelocationHelper {
                    .artifactId("jar-relocator")
                    .version("1.5")
                    .checksum("0D6eM99gKpEYFNDydgnto3Df0ygZGdRVqy5ahtj0oIs=")
+                   .repository(Repositories.MAVEN_CENTRAL)
                    .build()
         ));
 

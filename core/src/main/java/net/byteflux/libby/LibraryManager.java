@@ -27,9 +27,11 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
@@ -203,28 +205,28 @@ public abstract class LibraryManager {
      * Adds the Maven Central repository.
      */
     public void addMavenCentral() {
-        addRepository("https://repo1.maven.org/maven2/");
+        addRepository(Repositories.MAVEN_CENTRAL);
     }
 
     /**
      * Adds the Sonatype OSS repository.
      */
     public void addSonatype() {
-        addRepository("https://oss.sonatype.org/content/groups/public/");
+        addRepository(Repositories.SONATYPE);
     }
 
     /**
      * Adds the Bintray JCenter repository.
      */
     public void addJCenter() {
-        addRepository("https://jcenter.bintray.com/");
+        addRepository(Repositories.JCENTER);
     }
 
     /**
      * Adds the JitPack repository.
      */
     public void addJitPack() {
-        addRepository("https://jitpack.io/");
+        addRepository(Repositories.JITPACK);
     }
 
     /**
@@ -235,12 +237,18 @@ public abstract class LibraryManager {
      * @return download URLs
      */
     public Collection<String> resolveLibrary(Library library) {
-        List<String> urls = new LinkedList<>(requireNonNull(library, "library").getUrls());
+        Set<String> urls = new LinkedHashSet<>(requireNonNull(library, "library").getUrls());
+
+        // Try from library-declared repos first
+        for (String repository : library.getRepositories()) {
+            urls.add(repository + library.getPath());
+        }
+
         for (String repository : getRepositories()) {
             urls.add(repository + library.getPath());
         }
 
-        return Collections.unmodifiableList(urls);
+        return Collections.unmodifiableSet(urls);
     }
 
     /**
