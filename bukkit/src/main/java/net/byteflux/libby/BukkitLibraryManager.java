@@ -35,7 +35,7 @@ public class BukkitLibraryManager extends LibraryManager {
      */
     public BukkitLibraryManager(Plugin plugin, String directoryName) {
         super(new JDKLogAdapter(requireNonNull(plugin, "plugin").getLogger()), plugin.getDataFolder().toPath(), directoryName);
-        classLoader = new URLClassLoaderHelper((URLClassLoader) plugin.getClass().getClassLoader());
+        classLoader = new URLClassLoaderHelper((URLClassLoader) plugin.getClass().getClassLoader(), this);
     }
 
     /**

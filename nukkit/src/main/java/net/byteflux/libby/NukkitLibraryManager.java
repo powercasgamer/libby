@@ -35,7 +35,7 @@ public class NukkitLibraryManager extends LibraryManager {
      */
     public NukkitLibraryManager(Plugin plugin, String directoryName) {
         super(new NukkitLogAdapter(requireNonNull(plugin, "plugin").getLogger()), plugin.getDataFolder().toPath(), directoryName);
-        classLoader = new URLClassLoaderHelper((URLClassLoader) plugin.getClass().getClassLoader());
+        classLoader = new URLClassLoaderHelper((URLClassLoader) plugin.getClass().getClassLoader(), this);
     }
 
     /**
