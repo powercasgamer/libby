@@ -172,7 +172,9 @@ public class Library {
      *
      * @return the library id
      */
-    public String getId() {return id;}
+    public String getId() {
+        return id;
+    }
 
     /**
      * Gets the Maven group ID for this library.
@@ -278,7 +280,9 @@ public class Library {
      *
      * @return true if the library is loaded isolated
      */
-    public boolean isIsolatedLoad() {return isolatedLoad;}
+    public boolean isIsolatedLoad() {
+        return isolatedLoad;
+    }
 
     /**
      * Gets a concise, human-readable string representation of this library.
@@ -373,12 +377,14 @@ public class Library {
 
         /**
          * Adds a repository URL for this library.
+         * <p>Most common repositories can be found in {@link Repositories} class as constants.
+         * <p>Note that repositories should be preferably added to the {@link LibraryManager} via {@link LibraryManager#addRepository(String)}.
          *
          * @param url repository URL
          * @return this builder
          */
         public Builder repository(String url) {
-            repositories.add(requireNonNull(url, "repository"));
+            repositories.add(requireNonNull(url, "repository").endsWith("/") ? url : url + '/');
             return this;
         }
 

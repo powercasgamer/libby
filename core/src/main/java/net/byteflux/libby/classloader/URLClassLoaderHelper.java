@@ -2,6 +2,7 @@ package net.byteflux.libby.classloader;
 
 import net.byteflux.libby.Library;
 import net.byteflux.libby.LibraryManager;
+import net.byteflux.libby.Repositories;
 
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -129,7 +130,6 @@ public class URLClassLoaderHelper {
         // since java agents should have such permission.
 
         // Download ByteBuddy's agent and load it through an IsolatedClassLoader
-        libraryManager.addMavenCentral();
         IsolatedClassLoader isolatedClassLoader = new IsolatedClassLoader();
         try {
             isolatedClassLoader.addPath(libraryManager.downloadLibrary(
@@ -138,6 +138,7 @@ public class URLClassLoaderHelper {
                        .artifactId("byte-buddy-agent")
                        .version("1.12.1")
                        .checksum("mcCtBT9cljUEniB5ESpPDYZMfVxEs1JRPllOiWTP+bM=")
+                       .repository(Repositories.MAVEN_CENTRAL)
                        .build()
             ));
 

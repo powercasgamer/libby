@@ -28,7 +28,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +65,7 @@ public abstract class LibraryManager {
     /**
      * Maven repositories used to resolve artifacts
      */
-    private final Set<String> repositories = new HashSet<>();
+    private final Set<String> repositories = new LinkedHashSet<>();
 
     /**
      * Lazily-initialized relocation helper that uses reflection to call into
