@@ -43,7 +43,7 @@ public class SpongeLibraryManager<T> extends LibraryManager {
     @Inject
     private SpongeLibraryManager(Logger logger, @ConfigDir(sharedRoot = false) Path dataDirectory, T plugin, String directoryName) {
         super(new SLF4JLogAdapter(logger), dataDirectory, directoryName);
-        classLoader = new URLClassLoaderHelper((URLClassLoader) requireNonNull(plugin, "plugin").getClass().getClassLoader());
+        classLoader = new URLClassLoaderHelper((URLClassLoader) requireNonNull(plugin, "plugin").getClass().getClassLoader(), this);
     }
 
     /**
