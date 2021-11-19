@@ -23,6 +23,11 @@ public class Library {
     private final Collection<String> urls;
 
     /**
+     * Repository URLs for this library
+     */
+    private final Collection<String> repositories;
+
+    /**
      * Library id (used by Isolated Class Loaders)
      */
     private final String id;
@@ -75,16 +80,45 @@ public class Library {
     /**
      * Creates a new library.
      *
-     * @param urls        direct download URLs
-     * @param id          library ID
-     * @param groupId     Maven group ID
-     * @param artifactId  Maven artifact ID
-     * @param version     artifact version
-     * @param classifier  artifact classifier or null
-     * @param checksum    binary SHA-256 checksum or null
-     * @param relocations jar relocations or null
+     * @param urls         direct download URLs
+     * @param id           library ID
+     * @param groupId      Maven group ID
+     * @param artifactId   Maven artifact ID
+     * @param version      artifact version
+     * @param classifier   artifact classifier or null
+     * @param checksum     binary SHA-256 checksum or null
+     * @param relocations  jar relocations or null
+     * @param isolatedLoad isolated load for this library
      */
     private Library(Collection<String> urls,
+                    String id,
+                    String groupId,
+                    String artifactId,
+                    String version,
+                    String classifier,
+                    byte[] checksum,
+                    Collection<Relocation> relocations,
+                    boolean isolatedLoad) {
+
+        this(urls, null, id, groupId, artifactId, version, classifier, checksum, relocations, isolatedLoad);
+    }
+
+    /**
+     * Creates a new library.
+     *
+     * @param urls         direct download URLs
+     * @param repositories repository URLs
+     * @param id           library ID
+     * @param groupId      Maven group ID
+     * @param artifactId   Maven artifact ID
+     * @param version      artifact version
+     * @param classifier   artifact classifier or null
+     * @param checksum     binary SHA-256 checksum or null
+     * @param relocations  jar relocations or null
+     * @param isolatedLoad isolated load for this library
+     */
+    private Library(Collection<String> urls,
+                    Collection<String> repositories,
                     String id,
                     String groupId,
                     String artifactId,
@@ -109,6 +143,8 @@ public class Library {
         }
 
         this.path = path + ".jar";
+
+        this.repositories = repositories != null ? Collections.unmodifiableList(new LinkedList<>(repositories)) : Collections.emptyList();
         relocatedPath = hasRelocations() ? path + "-relocated.jar" : null;
         this.isolatedLoad = isolatedLoad;
     }
@@ -120,6 +156,15 @@ public class Library {
      */
     public Collection<String> getUrls() {
         return urls;
+    }
+
+    /**
+     * Gets the repositories URLs for this library.
+     *
+     * @return repositories URLs
+     */
+    public Collection<String> getRepositories() {
+        return repositories;
     }
 
     /**
@@ -271,6 +316,11 @@ public class Library {
         private final Collection<String> urls = new LinkedList<>();
 
         /**
+         * Repository URLs for this library
+         */
+        private final Collection<String> repositories = new LinkedList<>();
+
+        /**
          * The library ID
          */
         private String id;
@@ -318,6 +368,17 @@ public class Library {
          */
         public Builder url(String url) {
             urls.add(requireNonNull(url, "url"));
+            return this;
+        }
+
+        /**
+         * Adds a repository URL for this library.
+         *
+         * @param url repository URL
+         * @return this builder
+         */
+        public Builder repository(String url) {
+            repositories.add(requireNonNull(url, "repository"));
             return this;
         }
 
@@ -436,7 +497,7 @@ public class Library {
          * @return new library
          */
         public Library build() {
-            return new Library(urls, id, groupId, artifactId, version, classifier, checksum, relocations, isolatedLoad);
+            return new Library(urls, repositories, id, groupId, artifactId, version, classifier, checksum, relocations, isolatedLoad);
         }
     }
 }
