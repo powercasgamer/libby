@@ -2,15 +2,20 @@
 
 ## Changes in this fork
 
+### Version 1.1.4
+
+* Added another way to support Java 16+ without needing any additional command line parameters (using the Unsafe class)
+* Updated libraries used by Libby
+
 ### Version 1.1.3
 
-* Add support for Java 16+ without needing `--illegal-access=permit` or `--add-opens java.base/java.net=ALL-UNNAMED`
-* Add possibility to specify per-library repositories with `Library.Builder#repository(String repositoryURL)`
+* Added support for Java 16+ without needing `--illegal-access=permit` or `--add-opens java.base/java.net=ALL-UNNAMED` (using [ByteBuddy's Java Agent](https://github.com/raphw/byte-buddy/tree/master/byte-buddy-agent))
+* Added possibility to specify per-library repositories with `Library.Builder#repository(String repositoryURL)`
 * Avoid registration of duplicated repositories
 
 ### Version 1.1.2
 
-* Add support for libraries compiled with Java 16
+* Added support for libraries compiled with Java 16
 * Updated libraries used by Libby
 
 ### Version 1.1.1
@@ -62,7 +67,7 @@ Firstly, add the maven artifact to your `pom.xml`
 <dependency>
     <groupId>net.byteflux</groupId>
     <artifactId>libby-bukkit</artifactId> <!-- Replace bukkit if you're using another platform -->
-    <version>1.1.3</version>
+    <version>1.1.4</version>
 </dependency>
 ```
 
