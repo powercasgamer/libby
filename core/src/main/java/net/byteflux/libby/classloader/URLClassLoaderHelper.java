@@ -3,8 +3,13 @@ package net.byteflux.libby.classloader;
 import net.byteflux.libby.Library;
 import net.byteflux.libby.LibraryManager;
 import net.byteflux.libby.Repositories;
+import sun.misc.Unsafe;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -20,16 +25,37 @@ import static java.util.Objects.requireNonNull;
  * the classpath.
  */
 public class URLClassLoaderHelper {
+
+    /**
+     * Unsafe class instance. Used in {@link #getPrivilegedMethodHandle(Method)}.
+     */
+    private static final Unsafe theUnsafe;
+
+    static {
+        Unsafe unsafe = null; // Used to make theUnsafe field final
+
+        // getDeclaredField("theUnsafe") is not used to avoid breakage on JVMs with changed field name
+        for (Field f : Unsafe.class.getDeclaredFields()) {
+            try {
+                if (f.getType() == Unsafe.class && Modifier.isStatic(f.getModifiers())) {
+                    f.setAccessible(true);
+                    unsafe = (Unsafe) f.get(null);
+                }
+            } catch (Exception ignored) {
+            }
+        }
+        theUnsafe = unsafe;
+    }
+
     /**
      * The class loader being managed by this helper.
      */
     private final URLClassLoader classLoader;
 
     /**
-     * A reflected method in {@link URLClassLoader}, when invoked adds a URL
-     * to the classpath
+     * A reflected method in {@link URLClassLoader}, when invoked adds a URL to the classpath.
      */
-    private final Method addURLMethod;
+    private MethodHandle addURLMethodHandle = null;
 
     /**
      * Creates a new URL class loader helper.
@@ -42,7 +68,7 @@ public class URLClassLoaderHelper {
         this.classLoader = requireNonNull(classLoader, "classLoader");
 
         try {
-            addURLMethod = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
+            Method addURLMethod = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
 
             try {
                 openUrlClassLoaderModule();
@@ -55,10 +81,19 @@ public class URLClassLoaderHelper {
                 // InaccessibleObjectException has been added in Java 9
                 if (exception.getClass().getName().equals("java.lang.reflect.InaccessibleObjectException")) {
                     // It is Java 9+, try to open java.net package
+                    if (theUnsafe != null)
+                        try {
+                            addURLMethodHandle = getPrivilegedMethodHandle(addURLMethod).bindTo(classLoader);
+                            return; // We're done
+                        } catch (Exception ignored) {
+                            addURLMethodHandle = null; // Just to be sure the field is set to null
+                        }
+                    // Cannot use privileged MethodHandles.Lookup, trying with java agent
                     try {
                         addOpensWithAgent(libraryManager);
-                        this.addURLMethod.setAccessible(true);
+                        addURLMethod.setAccessible(true);
                     } catch (Exception e) {
+                        // Cannot access at all
                         System.err.println("Cannot access URLClassLoader#addURL(URL), if you are using Java 9+ try to add the following option to your java command: --add-opens java.base/java.net=ALL-UNNAMED");
                         throw new RuntimeException("Cannot access URLClassLoader#addURL(URL)", e);
                     }
@@ -66,7 +101,8 @@ public class URLClassLoaderHelper {
                     throw new RuntimeException("Cannot set accessible URLClassLoader#addURL(URL)", exception);
                 }
             }
-        } catch (NoSuchMethodException e) {
+            this.addURLMethodHandle = MethodHandles.lookup().unreflect(addURLMethod).bindTo(classLoader);
+        } catch (NoSuchMethodException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
@@ -78,8 +114,8 @@ public class URLClassLoaderHelper {
      */
     public void addToClasspath(URL url) {
         try {
-            addURLMethod.invoke(classLoader, requireNonNull(url, "url"));
-        } catch (ReflectiveOperationException e) {
+            addURLMethodHandle.invokeWithArguments(requireNonNull(url, "url"));
+        } catch (Throwable e) {
             throw new RuntimeException(e);
         }
     }
@@ -123,8 +159,29 @@ public class URLClassLoaderHelper {
         addOpensMethod.invoke(urlClassLoaderModule, URLClassLoader.class.getPackage().getName(), thisModule);
     }
 
-    private void addOpensWithAgent(LibraryManager libraryManager) throws Exception {
+    private MethodHandle getPrivilegedMethodHandle(Method method) throws Exception {
+        // Try to get a MethodHandle to URLClassLoader#addURL.
+        // The Unsafe class is used to get a privileged MethodHandles.Lookup instance.
 
+        // Looking for MethodHandles.Lookup#IMPL_LOOKUP private static field
+        // getDeclaredField("IMPL_LOOKUP") is not used to avoid breakage on JVMs with changed field name
+        for (Field trustedLookup : MethodHandles.Lookup.class.getDeclaredFields()) {
+            if (trustedLookup.getType() != MethodHandles.Lookup.class || !Modifier.isStatic(trustedLookup.getModifiers()) || trustedLookup.isSynthetic())
+                continue;
+
+            try {
+                MethodHandles.Lookup lookup = (MethodHandles.Lookup) theUnsafe.getObject(theUnsafe.staticFieldBase(trustedLookup), theUnsafe.staticFieldOffset(trustedLookup));
+                return lookup.unreflect(method);
+            } catch (Exception ignored) {
+                // Unreflect went wrong, trying the next field
+            }
+        }
+
+        // Every field has been tried
+        throw new RuntimeException("Cannot get privileged method handle.");
+    }
+
+    private void addOpensWithAgent(LibraryManager libraryManager) throws Exception {
         // To open URLClassLoader's module we need permissions.
         // Try to add a java agent at runtime (specifically, ByteBuddy's agent) and use it to open the module,
         // since java agents should have such permission.
