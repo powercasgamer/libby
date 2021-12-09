@@ -32,23 +32,6 @@ public class VelocityLibraryManager<T> extends LibraryManager {
      * @param dataDirectory plugin's data directory
      * @param pluginManager Velocity plugin manager
      * @param plugin        the plugin to manage
-     */
-    @Inject
-    private VelocityLibraryManager(Logger logger,
-                                   @DataDirectory Path dataDirectory,
-                                   PluginManager pluginManager,
-                                   T plugin) {
-
-        this(logger, dataDirectory, pluginManager, plugin, "lib");
-    }
-
-    /**
-     * Creates a new Velocity library manager.
-     *
-     * @param logger        the plugin logger
-     * @param dataDirectory plugin's data directory
-     * @param pluginManager Velocity plugin manager
-     * @param plugin        the plugin to manage
      * @param directoryName download directory name
      */
     @Inject
