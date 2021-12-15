@@ -26,18 +26,6 @@ public class SpongeLibraryManager<T> extends LibraryManager {
      * @param logger        the plugin logger
      * @param dataDirectory plugin's data directory
      * @param plugin        the plugin to manage
-     */
-    @Inject
-    private SpongeLibraryManager(Logger logger, @ConfigDir(sharedRoot = false) Path dataDirectory, T plugin) {
-        this(logger, dataDirectory, plugin, "lib");
-    }
-
-    /**
-     * Creates a new Sponge library manager.
-     *
-     * @param logger        the plugin logger
-     * @param dataDirectory plugin's data directory
-     * @param plugin        the plugin to manage
      * @param directoryName download directory name
      */
     @Inject

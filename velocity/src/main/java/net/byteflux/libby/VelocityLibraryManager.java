@@ -1,8 +1,6 @@
 package net.byteflux.libby;
 
-import com.google.inject.Inject;
 import com.velocitypowered.api.plugin.PluginManager;
-import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import net.byteflux.libby.logging.adapters.SLF4JLogAdapter;
 import org.slf4j.Logger;
 
@@ -32,14 +30,17 @@ public class VelocityLibraryManager<T> extends LibraryManager {
      * @param dataDirectory plugin's data directory
      * @param pluginManager Velocity plugin manager
      * @param plugin        the plugin to manage
+     * @param directoryName download directory name
      */
-    @Inject
-    private VelocityLibraryManager(Logger logger,
-                                   @DataDirectory Path dataDirectory,
-                                   PluginManager pluginManager,
-                                   T plugin) {
+    public VelocityLibraryManager(Logger logger,
+                                  Path dataDirectory,
+                                  PluginManager pluginManager,
+                                  T plugin,
+                                  String directoryName) {
 
-        this(logger, dataDirectory, pluginManager, plugin, "lib");
+        super(new SLF4JLogAdapter(logger), dataDirectory, directoryName);
+        this.pluginManager = requireNonNull(pluginManager, "pluginManager");
+        this.plugin = requireNonNull(plugin, "plugin");
     }
 
     /**
@@ -49,18 +50,12 @@ public class VelocityLibraryManager<T> extends LibraryManager {
      * @param dataDirectory plugin's data directory
      * @param pluginManager Velocity plugin manager
      * @param plugin        the plugin to manage
-     * @param directoryName download directory name
      */
-    @Inject
-    private VelocityLibraryManager(Logger logger,
-                                   @DataDirectory Path dataDirectory,
-                                   PluginManager pluginManager,
-                                   T plugin,
-                                   String directoryName) {
-
-        super(new SLF4JLogAdapter(logger), dataDirectory, directoryName);
-        this.pluginManager = requireNonNull(pluginManager, "pluginManager");
-        this.plugin = requireNonNull(plugin, "plugin");
+    public VelocityLibraryManager(Logger logger,
+                                  Path dataDirectory,
+                                  PluginManager pluginManager,
+                                  T plugin) {
+        this(logger, dataDirectory, pluginManager, plugin, "lib");
     }
 
     /**
