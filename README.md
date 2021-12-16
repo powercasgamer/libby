@@ -2,6 +2,12 @@
 
 ## Changes in this fork
 
+### Version 1.1.5
+
+* Fixed Velocity and Sponge support:
+  * Removed the constructor that didn't specify `directoryName` from Sponge
+  * Removed @Inject from Velocity constructors
+
 ### Version 1.1.4
 
 * Added another way to support Java 16+ without needing any additional command line parameters (using the Unsafe class)
@@ -67,7 +73,7 @@ Firstly, add the maven artifact to your `pom.xml`
 <dependency>
     <groupId>net.byteflux</groupId>
     <artifactId>libby-bukkit</artifactId> <!-- Replace bukkit if you're using another platform -->
-    <version>1.1.4</version>
+    <version>1.1.5</version>
 </dependency>
 ```
 
