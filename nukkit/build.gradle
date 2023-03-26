@@ -1,6 +1,4 @@
 dependencies {
-    api project(':libby-core')
-    compileOnly 'cn.nukkit:nukkit:1.0-SNAPSHOT'
+    api(projects.libbyCore)
+    compileOnly(libs.nukkit)
 }
-
-description = 'libby-nukkit'

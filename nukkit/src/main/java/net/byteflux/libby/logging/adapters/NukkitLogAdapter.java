@@ -9,6 +9,7 @@ import static java.util.Objects.requireNonNull;
  * Logging adapter that logs to a Nukkit plugin logger.
  */
 public class NukkitLogAdapter implements LogAdapter {
+
     /**
      * Nukkit plugin logger
      */
@@ -19,7 +20,7 @@ public class NukkitLogAdapter implements LogAdapter {
      *
      * @param logger the plugin logger to wrap
      */
-    public NukkitLogAdapter(PluginLogger logger) {
+    public NukkitLogAdapter(final PluginLogger logger) {
         this.logger = requireNonNull(logger, "logger");
     }
 
@@ -30,19 +31,19 @@ public class NukkitLogAdapter implements LogAdapter {
      * @param message the message to log
      */
     @Override
-    public void log(LogLevel level, String message) {
+    public void log(final LogLevel level, final String message) {
         switch (requireNonNull(level, "level")) {
             case DEBUG:
-                logger.debug(message);
+                this.logger.debug(message);
                 break;
             case INFO:
-                logger.info(message);
+                this.logger.info(message);
                 break;
             case WARN:
-                logger.warning(message);
+                this.logger.warning(message);
                 break;
             case ERROR:
-                logger.error(message);
+                this.logger.error(message);
                 break;
         }
     }
@@ -56,19 +57,19 @@ public class NukkitLogAdapter implements LogAdapter {
      * @param throwable the throwable to print
      */
     @Override
-    public void log(LogLevel level, String message, Throwable throwable) {
+    public void log(final LogLevel level, final String message, final Throwable throwable) {
         switch (requireNonNull(level, "level")) {
             case DEBUG:
-                logger.debug(message, throwable);
+                this.logger.debug(message, throwable);
                 break;
             case INFO:
-                logger.info(message, throwable);
+                this.logger.info(message, throwable);
                 break;
             case WARN:
-                logger.warning(message, throwable);
+                this.logger.warning(message, throwable);
                 break;
             case ERROR:
-                logger.error(message, throwable);
+                this.logger.error(message, throwable);
                 break;
         }
     }

@@ -13,6 +13,7 @@ import static java.util.Objects.requireNonNull;
  * A runtime dependency manager for Nukkit plugins.
  */
 public class NukkitLibraryManager extends LibraryManager {
+
     /**
      * Plugin classpath helper
      */
@@ -23,19 +24,19 @@ public class NukkitLibraryManager extends LibraryManager {
      *
      * @param plugin the plugin to manage
      */
-    public NukkitLibraryManager(Plugin plugin) {
-        this(plugin, "lib");
+    public NukkitLibraryManager(final Plugin plugin) {
+        this(plugin, "libs");
     }
 
     /**
      * Creates a new Nukkit library manager.
      *
-     * @param plugin the plugin to manage
+     * @param plugin        the plugin to manage
      * @param directoryName download directory name
      */
-    public NukkitLibraryManager(Plugin plugin, String directoryName) {
+    public NukkitLibraryManager(final Plugin plugin, final String directoryName) {
         super(new NukkitLogAdapter(requireNonNull(plugin, "plugin").getLogger()), plugin.getDataFolder().toPath(), directoryName);
-        classLoader = new URLClassLoaderHelper((URLClassLoader) plugin.getClass().getClassLoader(), this);
+        this.classLoader = new URLClassLoaderHelper((URLClassLoader) plugin.getClass().getClassLoader(), this);
     }
 
     /**
@@ -44,7 +45,7 @@ public class NukkitLibraryManager extends LibraryManager {
      * @param file the file to add
      */
     @Override
-    protected void addToClasspath(Path file) {
-        classLoader.addToClasspath(file);
+    protected void addToClasspath(final Path file) {
+        this.classLoader.addToClasspath(file);
     }
 }
