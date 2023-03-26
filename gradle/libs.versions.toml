@@ -5,6 +5,7 @@ indra = "3.1.0-SNAPSHOT"
 bungeecord = "1.19-R0.1-SNAPSHOT"
 bukkit = "1.19.4-R0.1-SNAPSHOT"
 velocity = "3.2.0-SNAPSHOT"
+sponge = "7.3.0"
 
 [libraries]
 velocity = { module = "com.velocitypowered:velocity-api", version.ref = "velocity" }
@@ -12,6 +13,7 @@ annotations = { module = "org.jetbrains:annotations", version.ref = "annotations
 paper = { module = "io.papermc.paper:paper-api", version.ref = "bukkit" }
 spigot = { module = "org.spigotmc:spigot-api", version.ref = "bukkit" }
 bungeecord = { module = "net.md-5:bungeecord-api", version.ref = "bungeecord" }
+sponge-api = { module = "org.spongepowered:spongeapi", version.ref = "sponge" }
 
 [plugins]
 titan = { id = "net.deltapvp.titan", version.ref = "titan" }

@@ -12,6 +12,7 @@ import static java.util.Objects.requireNonNull;
  * A runtime dependency manager for Velocity plugins.
  */
 public class VelocityLibraryManager<T> extends LibraryManager {
+
     /**
      * Velocity plugin manager used for adding files to the plugin's classpath
      */

@@ -1,7 +1,5 @@
 dependencies {
-    api project(':libby-core')
-    api project(':libby-slf4j')
-    compileOnly 'org.spongepowered:spongeapi:7.3.0'
+    api(projects.libbyCore)
+    api(projects.libbySlf4j)
+    compileOnly(libs.sponge.api)
 }
-
-description = 'libby-sponge'

@@ -15,6 +15,7 @@ import static java.util.Objects.requireNonNull;
  * A runtime dependency manager for Sponge plugins.
  */
 public class SpongeLibraryManager<T> extends LibraryManager {
+
     /**
      * Plugin classpath helper
      */
@@ -29,9 +30,9 @@ public class SpongeLibraryManager<T> extends LibraryManager {
      * @param directoryName download directory name
      */
     @Inject
-    private SpongeLibraryManager(Logger logger, @ConfigDir(sharedRoot = false) Path dataDirectory, T plugin, String directoryName) {
+    private SpongeLibraryManager(final Logger logger, @ConfigDir(sharedRoot = false) final Path dataDirectory, final T plugin, final String directoryName) {
         super(new SLF4JLogAdapter(logger), dataDirectory, directoryName);
-        classLoader = new URLClassLoaderHelper((URLClassLoader) requireNonNull(plugin, "plugin").getClass().getClassLoader(), this);
+        this.classLoader = new URLClassLoaderHelper((URLClassLoader) requireNonNull(plugin, "plugin").getClass().getClassLoader(), this);
     }
 
     /**
@@ -40,7 +41,7 @@ public class SpongeLibraryManager<T> extends LibraryManager {
      * @param file the file to add
      */
     @Override
-    protected void addToClasspath(Path file) {
-        classLoader.addToClasspath(file);
+    protected void addToClasspath(final Path file) {
+        this.classLoader.addToClasspath(file);
     }
 }

@@ -26,7 +26,7 @@ sequenceOf(
     "velocity",
     "paper",
     // "nukkit",
-    // "sponge",
+     "sponge",
     "slf4j"
 ).forEach {
     include("libby-$it")
