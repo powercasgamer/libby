@@ -1,0 +1,19 @@
+[versions]
+annotations = "24.0.1"
+titan = "1.1.13"
+indra = "3.1.0-SNAPSHOT"
+waterfall = "1.19-R0.1-SNAPSHOT"
+bukkit = "1.19.4-R0.1-SNAPSHOT"
+velocity = "3.2.0-SNAPSHOT"
+
+[libraries]
+velocity = { module = "com.velocitypowered:velocity-api", version.ref = "velocity" }
+annotations = { module = "org.jetbrains:annotations", version.ref = "annotations" }
+paper = { module = "io.papermc.paper:paper-api", version.ref = "bukkit" }
+spigot = { module = "org.spigotmc:spigot-api", version.ref = "bukkit" }
+
+[plugins]
+titan = { id = "net.deltapvp.titan", version.ref = "titan" }
+indra = { id = "net.kyori.indra", version.ref = "indra" }
+indra-publishing = { id = "net.kyori.indra.publishing", version.ref = "indra" }
+indra-crossdoc = { id = "net.kyori.indra.crossdoc", version.ref = "indra" }

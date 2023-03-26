@@ -19,7 +19,7 @@ public class SLF4JLogAdapter implements LogAdapter {
      *
      * @param logger the SLF4J logger to wrap
      */
-    public SLF4JLogAdapter(Logger logger) {
+    public SLF4JLogAdapter(final Logger logger) {
         this.logger = requireNonNull(logger, "logger");
     }
 
@@ -30,20 +30,12 @@ public class SLF4JLogAdapter implements LogAdapter {
      * @param message the message to log
      */
     @Override
-    public void log(LogLevel level, String message) {
+    public void log(final LogLevel level, final String message) {
         switch (requireNonNull(level, "level")) {
-            case DEBUG:
-                logger.debug(message);
-                break;
-            case INFO:
-                logger.info(message);
-                break;
-            case WARN:
-                logger.warn(message);
-                break;
-            case ERROR:
-                logger.error(message);
-                break;
+            case DEBUG -> this.logger.debug(message);
+            case INFO -> this.logger.info(message);
+            case WARN -> this.logger.warn(message);
+            case ERROR -> this.logger.error(message);
         }
     }
 
@@ -56,20 +48,12 @@ public class SLF4JLogAdapter implements LogAdapter {
      * @param throwable the throwable to print
      */
     @Override
-    public void log(LogLevel level, String message, Throwable throwable) {
+    public void log(final LogLevel level, final String message, final Throwable throwable) {
         switch (requireNonNull(level, "level")) {
-            case DEBUG:
-                logger.debug(message, throwable);
-                break;
-            case INFO:
-                logger.info(message, throwable);
-                break;
-            case WARN:
-                logger.warn(message, throwable);
-                break;
-            case ERROR:
-                logger.error(message, throwable);
-                break;
+            case DEBUG -> this.logger.debug(message, throwable);
+            case INFO -> this.logger.info(message, throwable);
+            case WARN -> this.logger.warn(message, throwable);
+            case ERROR -> this.logger.error(message, throwable);
         }
     }
 }

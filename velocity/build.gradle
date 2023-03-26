@@ -1,0 +1,5 @@
+dependencies {
+    api(projects.libbyCore)
+    api(projects.libbySlf4j)
+    compileOnly(libs.velocity)
+}

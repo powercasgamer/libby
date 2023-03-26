@@ -90,15 +90,15 @@ public class Library {
      * @param relocations  jar relocations or null
      * @param isolatedLoad isolated load for this library
      */
-    private Library(Collection<String> urls,
-                    String id,
-                    String groupId,
-                    String artifactId,
-                    String version,
-                    String classifier,
-                    byte[] checksum,
-                    Collection<Relocation> relocations,
-                    boolean isolatedLoad) {
+    private Library(final Collection<String> urls,
+                    final String id,
+                    final String groupId,
+                    final String artifactId,
+                    final String version,
+                    final String classifier,
+                    final byte[] checksum,
+                    final Collection<Relocation> relocations,
+                    final boolean isolatedLoad) {
 
         this(urls, null, id, groupId, artifactId, version, classifier, checksum, relocations, isolatedLoad);
     }
@@ -117,16 +117,16 @@ public class Library {
      * @param relocations  jar relocations or null
      * @param isolatedLoad isolated load for this library
      */
-    private Library(Collection<String> urls,
-                    Collection<String> repositories,
-                    String id,
-                    String groupId,
-                    String artifactId,
-                    String version,
-                    String classifier,
-                    byte[] checksum,
-                    Collection<Relocation> relocations,
-                    boolean isolatedLoad) {
+    private Library(final Collection<String> urls,
+                    final Collection<String> repositories,
+                    final String id,
+                    final String groupId,
+                    final String artifactId,
+                    final String version,
+                    final String classifier,
+                    final byte[] checksum,
+                    final Collection<Relocation> relocations,
+                    final boolean isolatedLoad) {
 
         this.urls = urls != null ? Collections.unmodifiableList(new LinkedList<>(urls)) : Collections.emptyList();
         this.id = id != null ? id : UUID.randomUUID().toString();
@@ -145,7 +145,7 @@ public class Library {
         this.path = path + ".jar";
 
         this.repositories = repositories != null ? Collections.unmodifiableList(new LinkedList<>(repositories)) : Collections.emptyList();
-        relocatedPath = hasRelocations() ? path + "-relocated.jar" : null;
+        this.relocatedPath = hasRelocations() ? path + "-relocated.jar" : null;
         this.isolatedLoad = isolatedLoad;
     }
 
@@ -155,7 +155,7 @@ public class Library {
      * @return direct download URLs
      */
     public Collection<String> getUrls() {
-        return urls;
+        return this.urls;
     }
 
     /**
@@ -164,7 +164,7 @@ public class Library {
      * @return repositories URLs
      */
     public Collection<String> getRepositories() {
-        return repositories;
+        return this.repositories;
     }
 
     /**
@@ -173,7 +173,7 @@ public class Library {
      * @return the library id
      */
     public String getId() {
-        return id;
+        return this.id;
     }
 
     /**
@@ -182,7 +182,7 @@ public class Library {
      * @return Maven group ID
      */
     public String getGroupId() {
-        return groupId;
+        return this.groupId;
     }
 
     /**
@@ -191,7 +191,7 @@ public class Library {
      * @return Maven artifact ID
      */
     public String getArtifactId() {
-        return artifactId;
+        return this.artifactId;
     }
 
     /**
@@ -200,7 +200,7 @@ public class Library {
      * @return artifact version
      */
     public String getVersion() {
-        return version;
+        return this.version;
     }
 
     /**
@@ -209,7 +209,7 @@ public class Library {
      * @return artifact classifier or null
      */
     public String getClassifier() {
-        return classifier;
+        return this.classifier;
     }
 
     /**
@@ -218,7 +218,7 @@ public class Library {
      * @return true if library has classifier, false otherwise
      */
     public boolean hasClassifier() {
-        return classifier != null;
+        return this.classifier != null;
     }
 
     /**
@@ -227,7 +227,7 @@ public class Library {
      * @return checksum or null
      */
     public byte[] getChecksum() {
-        return checksum;
+        return this.checksum;
     }
 
     /**
@@ -236,7 +236,7 @@ public class Library {
      * @return true if library has checksum, false otherwise
      */
     public boolean hasChecksum() {
-        return checksum != null;
+        return this.checksum != null;
     }
 
     /**
@@ -245,7 +245,7 @@ public class Library {
      * @return jar relocations to apply
      */
     public Collection<Relocation> getRelocations() {
-        return relocations;
+        return this.relocations;
     }
 
     /**
@@ -254,7 +254,7 @@ public class Library {
      * @return true if library has relocations, false otherwise
      */
     public boolean hasRelocations() {
-        return !relocations.isEmpty();
+        return !this.relocations.isEmpty();
     }
 
     /**
@@ -263,7 +263,7 @@ public class Library {
      * @return Maven path for this library
      */
     public String getPath() {
-        return path;
+        return this.path;
     }
 
     /**
@@ -272,7 +272,7 @@ public class Library {
      * @return path to relocated artifact or null if has no relocations
      */
     public String getRelocatedPath() {
-        return relocatedPath;
+        return this.relocatedPath;
     }
 
     /**
@@ -281,7 +281,7 @@ public class Library {
      * @return true if the library is loaded isolated
      */
     public boolean isIsolatedLoad() {
-        return isolatedLoad;
+        return this.isolatedLoad;
     }
 
     /**
@@ -291,9 +291,9 @@ public class Library {
      */
     @Override
     public String toString() {
-        String name = groupId + ':' + artifactId + ':' + version;
+        String name = this.groupId + ':' + this.artifactId + ':' + this.version;
         if (hasClassifier()) {
-            name += ':' + classifier;
+            name += ':' + this.classifier;
         }
 
         return name;
@@ -370,8 +370,8 @@ public class Library {
          * @param url direct download URL
          * @return this builder
          */
-        public Builder url(String url) {
-            urls.add(requireNonNull(url, "url"));
+        public Builder url(final String url) {
+            this.urls.add(requireNonNull(url, "url"));
             return this;
         }
 
@@ -383,8 +383,8 @@ public class Library {
          * @param url repository URL
          * @return this builder
          */
-        public Builder repository(String url) {
-            repositories.add(requireNonNull(url, "repository").endsWith("/") ? url : url + '/');
+        public Builder repository(final String url) {
+            this.repositories.add(!requireNonNull(url, "repository").isEmpty() && requireNonNull(url, "repository").charAt(requireNonNull(url, "repository").length() - 1) == '/' ? url : url + '/');
             return this;
         }
 
@@ -394,7 +394,7 @@ public class Library {
          * @param id the ID
          * @return this builder
          */
-        public Builder id(String id) {
+        public Builder id(final String id) {
             this.id = id != null ? id : UUID.randomUUID().toString();
             return this;
         }
@@ -405,7 +405,7 @@ public class Library {
          * @param groupId Maven group ID
          * @return this builder
          */
-        public Builder groupId(String groupId) {
+        public Builder groupId(final String groupId) {
             this.groupId = requireNonNull(groupId, "groupId");
             return this;
         }
@@ -416,7 +416,7 @@ public class Library {
          * @param artifactId Maven artifact ID
          * @return this builder
          */
-        public Builder artifactId(String artifactId) {
+        public Builder artifactId(final String artifactId) {
             this.artifactId = requireNonNull(artifactId, "artifactId");
             return this;
         }
@@ -427,7 +427,7 @@ public class Library {
          * @param version artifact version
          * @return this builder
          */
-        public Builder version(String version) {
+        public Builder version(final String version) {
             this.version = requireNonNull(version, "version");
             return this;
         }
@@ -438,7 +438,7 @@ public class Library {
          * @param classifier artifact classifier
          * @return this builder
          */
-        public Builder classifier(String classifier) {
+        public Builder classifier(final String classifier) {
             this.classifier = requireNonNull(classifier, "classifier");
             return this;
         }
@@ -449,7 +449,7 @@ public class Library {
          * @param checksum binary SHA-256 checksum
          * @return this builder
          */
-        public Builder checksum(byte[] checksum) {
+        public Builder checksum(final byte[] checksum) {
             this.checksum = requireNonNull(checksum, "checksum");
             return this;
         }
@@ -460,7 +460,7 @@ public class Library {
          * @param checksum Base64-encoded SHA-256 checksum
          * @return this builder
          */
-        public Builder checksum(String checksum) {
+        public Builder checksum(final String checksum) {
             return checksum(Base64.getDecoder().decode(requireNonNull(checksum, "checksum")));
         }
 
@@ -470,7 +470,7 @@ public class Library {
          * @param isolatedLoad the isolated load boolean
          * @return this builder
          */
-        public Builder isolatedLoad(boolean isolatedLoad) {
+        public Builder isolatedLoad(final boolean isolatedLoad) {
             this.isolatedLoad = isolatedLoad;
             return this;
         }
@@ -481,8 +481,8 @@ public class Library {
          * @param relocation jar relocation to apply
          * @return this builder
          */
-        public Builder relocate(Relocation relocation) {
-            relocations.add(requireNonNull(relocation, "relocation"));
+        public Builder relocate(final Relocation relocation) {
+            this.relocations.add(requireNonNull(relocation, "relocation"));
             return this;
         }
 
@@ -493,7 +493,7 @@ public class Library {
          * @param relocatedPattern replacement pattern
          * @return this builder
          */
-        public Builder relocate(String pattern, String relocatedPattern) {
+        public Builder relocate(final String pattern, final String relocatedPattern) {
             return relocate(new Relocation(pattern, relocatedPattern));
         }
 
@@ -503,7 +503,7 @@ public class Library {
          * @return new library
          */
         public Library build() {
-            return new Library(urls, repositories, id, groupId, artifactId, version, classifier, checksum, relocations, isolatedLoad);
+            return new Library(this.urls, this.repositories, this.id, this.groupId, this.artifactId, this.version, this.classifier, this.checksum, this.relocations, this.isolatedLoad);
         }
     }
 }

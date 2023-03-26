@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>net.byteflux</groupId>
+        <groupId>org.mineorbit</groupId>
         <artifactId>libby</artifactId>
-        <version>1.1.5</version>
+        <version>1.1.6</version>
     </parent>
 
     <artifactId>libby-bungee</artifactId>
@@ -21,7 +21,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>net.byteflux</groupId>
+            <groupId>org.mineorbit</groupId>
             <artifactId>libby-core</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -37,6 +37,17 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Automatic-Module-Name>net.byteflux.libby.bungee</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
     </build>

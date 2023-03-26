@@ -1,0 +1,50 @@
+plugins {
+    alias(libs.plugins.indra.publishing)
+    alias(libs.plugins.indra)
+    alias(libs.plugins.titan)
+}
+
+group("org.mineorbit.libby")
+
+subprojects {
+    apply plugin: "net.kyori.indra"
+    apply plugin: "net.kyori.indra.publishing"
+    apply plugin: "net.deltapvp.titan"
+
+    shadowJar {
+        def toRelocate = ["org.intellij", "org.jetbrains.annotations"]
+
+        toRelocate.forEach {
+            relocate(it, "org.mineorbit.libby.lib.${it}")
+        }
+    }
+
+    indra {
+        mitLicense()
+        github("powercasgamer", "libby")
+        javaVersions {
+            testWith(17, 19)
+            target(17)
+            minimumToolchain(19)
+        }
+
+        configurePublications {
+            pom {
+                developers {
+                    developer {
+                        id = "powercas_gamer"
+                        timezone = "Europe/Amsterdam"
+                    }
+                }
+            }
+
+            versionMapping {
+                usage(Usage.JAVA_API) { fromResolutionOf(JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME) }
+                usage(Usage.JAVA_RUNTIME) { fromResolutionResult() }
+            }
+        }
+
+        publishReleasesTo("delta", "https://reposilite.deltapvp.net/releases/")
+        publishSnapshotsTo("delta", "https://reposilite.deltapvp.net/snapshots/")
+    }
+}
