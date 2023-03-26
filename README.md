@@ -6,7 +6,6 @@
 
 * Updated Nukkit maven repository
 * Use Gradle instead of Maven
-* Deprecated Bungeecord, Nukkit & Sponge module (feel free to pr)
 * Added java 9 module support [Credit](https://github.com/AlessioDP/libby/pull/12) by [4drian3d](https://github.com/4drian3d)
 * Added paper-plugins support. [Credit](https://github.com/AlessioDP/libby/pull/13) by [kyngs](https://github.com/kyngs)
 * Dropped support for anything under Java 17
