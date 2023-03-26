@@ -22,7 +22,7 @@ public class IsolatedClassLoader extends URLClassLoader {
      *
      * @param urls the URLs to add to the classpath
      */
-    public IsolatedClassLoader(URL... urls) {
+    public IsolatedClassLoader(final URL... urls) {
         super(requireNonNull(urls, "urls"), ClassLoader.getSystemClassLoader().getParent());
     }
 
@@ -32,7 +32,7 @@ public class IsolatedClassLoader extends URLClassLoader {
      * @param url the URL to add
      */
     @Override
-    public void addURL(URL url) {
+    public void addURL(final URL url) {
         super.addURL(url);
     }
 
@@ -41,10 +41,10 @@ public class IsolatedClassLoader extends URLClassLoader {
      *
      * @param path the path to add
      */
-    public void addPath(Path path) {
+    public void addPath(final Path path) {
         try {
             addURL(requireNonNull(path, "path").toUri().toURL());
-        } catch (MalformedURLException e) {
+        } catch (final MalformedURLException e) {
             throw new IllegalArgumentException(e);
         }
     }

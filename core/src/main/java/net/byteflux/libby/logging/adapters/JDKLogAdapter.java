@@ -21,7 +21,7 @@ public class JDKLogAdapter implements LogAdapter {
      *
      * @param logger the JDK logger to wrap
      */
-    public JDKLogAdapter(Logger logger) {
+    public JDKLogAdapter(final Logger logger) {
         this.logger = requireNonNull(logger, "logger");
     }
 
@@ -32,20 +32,12 @@ public class JDKLogAdapter implements LogAdapter {
      * @param message the message to log
      */
     @Override
-    public void log(LogLevel level, String message) {
+    public void log(final LogLevel level, final String message) {
         switch (requireNonNull(level, "level")) {
-            case DEBUG:
-                logger.log(Level.FINE, message);
-                break;
-            case INFO:
-                logger.log(Level.INFO, message);
-                break;
-            case WARN:
-                logger.log(Level.WARNING, message);
-                break;
-            case ERROR:
-                logger.log(Level.SEVERE, message);
-                break;
+            case DEBUG -> this.logger.log(Level.FINE, message);
+            case INFO -> this.logger.log(Level.INFO, message);
+            case WARN -> this.logger.log(Level.WARNING, message);
+            case ERROR -> this.logger.log(Level.SEVERE, message);
         }
     }
 
@@ -58,20 +50,12 @@ public class JDKLogAdapter implements LogAdapter {
      * @param throwable the throwable to print
      */
     @Override
-    public void log(LogLevel level, String message, Throwable throwable) {
+    public void log(final LogLevel level, final String message, final Throwable throwable) {
         switch (requireNonNull(level, "level")) {
-            case DEBUG:
-                logger.log(Level.FINE, message, throwable);
-                break;
-            case INFO:
-                logger.log(Level.INFO, message, throwable);
-                break;
-            case WARN:
-                logger.log(Level.WARNING, message, throwable);
-                break;
-            case ERROR:
-                logger.log(Level.SEVERE, message, throwable);
-                break;
+            case DEBUG -> this.logger.log(Level.FINE, message, throwable);
+            case INFO -> this.logger.log(Level.INFO, message, throwable);
+            case WARN -> this.logger.log(Level.WARNING, message, throwable);
+            case ERROR -> this.logger.log(Level.SEVERE, message, throwable);
         }
     }
 }

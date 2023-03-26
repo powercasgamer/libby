@@ -40,7 +40,7 @@ public class Relocation {
      * @param includes         classes and resources to include
      * @param excludes         classes and resources to exclude
      */
-    public Relocation(String pattern, String relocatedPattern, Collection<String> includes, Collection<String> excludes) {
+    public Relocation(final String pattern, final String relocatedPattern, final Collection<String> includes, final Collection<String> excludes) {
         this.pattern = requireNonNull(pattern, "pattern").replace("{}", ".");
         this.relocatedPattern = requireNonNull(relocatedPattern, "relocatedPattern").replace("{}", ".");
         this.includes = includes != null ? Collections.unmodifiableList(new LinkedList<>(includes)) : Collections.emptyList();
@@ -53,7 +53,7 @@ public class Relocation {
      * @param pattern          search pattern
      * @param relocatedPattern replacement pattern
      */
-    public Relocation(String pattern, String relocatedPattern) {
+    public Relocation(final String pattern, final String relocatedPattern) {
         this(pattern, relocatedPattern, null, null);
     }
 
@@ -63,7 +63,7 @@ public class Relocation {
      * @return pattern to search
      */
     public String getPattern() {
-        return pattern;
+        return this.pattern;
     }
 
     /**
@@ -72,7 +72,7 @@ public class Relocation {
      * @return pattern to replace with
      */
     public String getRelocatedPattern() {
-        return relocatedPattern;
+        return this.relocatedPattern;
     }
 
     /**
@@ -81,7 +81,7 @@ public class Relocation {
      * @return classes and resources to include
      */
     public Collection<String> getIncludes() {
-        return includes;
+        return this.includes;
     }
 
     /**
@@ -90,7 +90,7 @@ public class Relocation {
      * @return classes and resources to exclude
      */
     public Collection<String> getExcludes() {
-        return excludes;
+        return this.excludes;
     }
 
     /**
@@ -134,7 +134,7 @@ public class Relocation {
          * @param pattern pattern to search
          * @return this builder
          */
-        public Builder pattern(String pattern) {
+        public Builder pattern(final String pattern) {
             this.pattern = requireNonNull(pattern, "pattern");
             return this;
         }
@@ -145,7 +145,7 @@ public class Relocation {
          * @param relocatedPattern pattern to replace with
          * @return this builder
          */
-        public Builder relocatedPattern(String relocatedPattern) {
+        public Builder relocatedPattern(final String relocatedPattern) {
             this.relocatedPattern = requireNonNull(relocatedPattern, "relocatedPattern");
             return this;
         }
@@ -156,8 +156,8 @@ public class Relocation {
          * @param include class or resource to include
          * @return this builder
          */
-        public Builder include(String include) {
-            includes.add(requireNonNull(include, "include"));
+        public Builder include(final String include) {
+            this.includes.add(requireNonNull(include, "include"));
             return this;
         }
 
@@ -167,8 +167,8 @@ public class Relocation {
          * @param exclude class or resource to exclude
          * @return this builder
          */
-        public Builder exclude(String exclude) {
-            excludes.add(requireNonNull(exclude, "exclude"));
+        public Builder exclude(final String exclude) {
+            this.excludes.add(requireNonNull(exclude, "exclude"));
             return this;
         }
 
@@ -178,7 +178,7 @@ public class Relocation {
          * @return new relocation
          */
         public Relocation build() {
-            return new Relocation(pattern, relocatedPattern, includes, excludes);
+            return new Relocation(this.pattern, this.relocatedPattern, this.includes, this.excludes);
         }
     }
 }

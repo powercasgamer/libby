@@ -32,11 +32,11 @@ public class VelocityLibraryManager<T> extends LibraryManager {
      * @param plugin        the plugin to manage
      * @param directoryName download directory name
      */
-    public VelocityLibraryManager(Logger logger,
-                                  Path dataDirectory,
-                                  PluginManager pluginManager,
-                                  T plugin,
-                                  String directoryName) {
+    public VelocityLibraryManager(final Logger logger,
+                                  final Path dataDirectory,
+                                  final PluginManager pluginManager,
+                                  final T plugin,
+                                  final String directoryName) {
 
         super(new SLF4JLogAdapter(logger), dataDirectory, directoryName);
         this.pluginManager = requireNonNull(pluginManager, "pluginManager");
@@ -51,11 +51,11 @@ public class VelocityLibraryManager<T> extends LibraryManager {
      * @param pluginManager Velocity plugin manager
      * @param plugin        the plugin to manage
      */
-    public VelocityLibraryManager(Logger logger,
-                                  Path dataDirectory,
-                                  PluginManager pluginManager,
-                                  T plugin) {
-        this(logger, dataDirectory, pluginManager, plugin, "lib");
+    public VelocityLibraryManager(final Logger logger,
+                                  final Path dataDirectory,
+                                  final PluginManager pluginManager,
+                                  final T plugin) {
+        this(logger, dataDirectory, pluginManager, plugin, "libs");
     }
 
     /**
@@ -64,7 +64,7 @@ public class VelocityLibraryManager<T> extends LibraryManager {
      * @param file the file to add
      */
     @Override
-    protected void addToClasspath(Path file) {
-        pluginManager.addToClasspath(plugin, file);
+    protected void addToClasspath(final Path file) {
+        this.pluginManager.addToClasspath(this.plugin, file);
     }
 }

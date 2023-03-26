@@ -43,18 +43,18 @@ public class RelocationHelper {
      *
      * @param libraryManager the library manager used to download dependencies
      */
-    public RelocationHelper(LibraryManager libraryManager) {
+    public RelocationHelper(final LibraryManager libraryManager) {
         requireNonNull(libraryManager, "libraryManager");
 
-        IsolatedClassLoader classLoader = new IsolatedClassLoader();
+        final IsolatedClassLoader classLoader = new IsolatedClassLoader();
 
         // ObjectWeb ASM Commons
         classLoader.addPath(libraryManager.downloadLibrary(
             Library.builder()
                    .groupId("org.ow2.asm")
                    .artifactId("asm-commons")
-                   .version("9.2")
-                   .checksum("vkzlMTiiOLtSLNeBz5Hzulzi9sqT7GLUahYqEnIl4KY=")
+                   .version("9.5")
+                   .checksum("cu7p+6+53o2UY/IN1YSkjO635RUq1MmHv74X3UgRya4=")
                    .repository(Repositories.MAVEN_CENTRAL)
                    .build()
         ));
@@ -64,8 +64,8 @@ public class RelocationHelper {
             Library.builder()
                    .groupId("org.ow2.asm")
                    .artifactId("asm")
-                   .version("9.2")
-                   .checksum("udT+TXGTjfOIOfDspCqqpkz4sxPWeNoDbwyzyhmbR/U=")
+                   .version("9.5")
+                   .checksum("ti6EtZgHKXUbBFjFNM8TZvcnVCu40VhiEzVoKkYPA1M=")
                    .repository(Repositories.MAVEN_CENTRAL)
                    .build()
         ));
@@ -75,25 +75,25 @@ public class RelocationHelper {
             Library.builder()
                    .groupId("me.lucko")
                    .artifactId("jar-relocator")
-                   .version("1.5")
-                   .checksum("0D6eM99gKpEYFNDydgnto3Df0ygZGdRVqy5ahtj0oIs=")
+                   .version("1.6")
+                   .checksum("0EkdPKSRotTUGvB7nEy5HNaB4nxTxlQOhcmWJsRyhlg=")
                    .repository(Repositories.MAVEN_CENTRAL)
                    .build()
         ));
 
         try {
-            Class<?> jarRelocatorClass = classLoader.loadClass("me.lucko.jarrelocator.JarRelocator");
-            Class<?> relocationClass = classLoader.loadClass("me.lucko.jarrelocator.Relocation");
+            final Class<?> jarRelocatorClass = classLoader.loadClass("me.lucko.jarrelocator.JarRelocator");
+            final Class<?> relocationClass = classLoader.loadClass("me.lucko.jarrelocator.Relocation");
 
             // me.lucko.jarrelocator.JarRelocator(File, File, Collection)
-            jarRelocatorConstructor = jarRelocatorClass.getConstructor(File.class, File.class, Collection.class);
+            this.jarRelocatorConstructor = jarRelocatorClass.getConstructor(File.class, File.class, Collection.class);
 
             // me.lucko.jarrelocator.JarRelocator#run()
-            jarRelocatorRunMethod = jarRelocatorClass.getMethod("run");
+            this.jarRelocatorRunMethod = jarRelocatorClass.getMethod("run");
 
             // me.lucko.jarrelocator.Relocation(String, String, Collection, Collection)
-            relocationConstructor = relocationClass.getConstructor(String.class, String.class, Collection.class, Collection.class);
-        } catch (ReflectiveOperationException e) {
+            this.relocationConstructor = relocationClass.getConstructor(String.class, String.class, Collection.class, Collection.class);
+        } catch (final ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
     }
@@ -106,15 +106,15 @@ public class RelocationHelper {
      * @param out         output jar
      * @param relocations relocations to apply
      */
-    public void relocate(Path in, Path out, Collection<Relocation> relocations) {
+    public void relocate(final Path in, final Path out, final Collection<Relocation> relocations) {
         requireNonNull(in, "in");
         requireNonNull(out, "out");
         requireNonNull(relocations, "relocations");
 
         try {
-            List<Object> rules = new LinkedList<>();
-            for (Relocation relocation : relocations) {
-                rules.add(relocationConstructor.newInstance(
+            final List<Object> rules = new LinkedList<>();
+            for (final Relocation relocation : relocations) {
+                rules.add(this.relocationConstructor.newInstance(
                     relocation.getPattern(),
                     relocation.getRelocatedPattern(),
                     relocation.getIncludes(),
@@ -122,8 +122,8 @@ public class RelocationHelper {
                 ));
             }
 
-            jarRelocatorRunMethod.invoke(jarRelocatorConstructor.newInstance(in.toFile(), out.toFile(), rules));
-        } catch (ReflectiveOperationException e) {
+            this.jarRelocatorRunMethod.invoke(this.jarRelocatorConstructor.newInstance(in.toFile(), out.toFile(), rules));
+        } catch (final ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
     }

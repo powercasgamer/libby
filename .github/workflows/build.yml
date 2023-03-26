@@ -1,0 +1,75 @@
+name: "build"
+
+on:
+  push:
+    branches: ["**"]
+    tags-ignore: ["**"]
+  pull_request:
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.event.number || github.ref }}"
+  cancel-in-progress: false
+
+permissions:
+  actions: "write"
+  contents: "read"
+
+jobs:
+  build:
+    # Only run on PRs if the source branch is on someone else's repo
+    if: "${{ github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name }}"
+    strategy:
+      matrix:
+        java: ["19"]
+        os: ["ubuntu-latest"]
+      fail-fast: true
+    runs-on: "${{ matrix.os }}"
+    steps:
+      - name: "checkout repository"
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: true
+
+      - name: Make wrapper executable
+        run: |
+          chmod +x gradlew
+
+      - name: "validate gradle wrapper"
+        uses: "gradle/wrapper-validation-action@v1"
+
+      - name: "Setup JDK ${{ matrix.java }}"
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "${{ matrix.java }}"
+          cache: "gradle"
+
+      # Actually build
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ~/.gradle/notifications
+            ~/.gradle/jdks
+            .gradle/loom-cache
+            .gradle/caches/VanillaGradle
+            .gradle/caches/paperweight
+            */.gradle/caches/paperweight
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/libs.versions.*', '**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-deltapvp-
+
+      - name: "run gradle build"
+        uses: "gradle/gradle-build-action@v2"
+        with:
+          cache-read-only: "${{ !startsWith(github.ref, 'refs/heads/updated/') || github.event_name == 'pull_request' }}"
+          arguments: "build --stacktrace"
+
+      - name: Cleanup Gradle Cache
+        # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
+        # Restoring these files from a GitHub Actions cache might cause problems for future builds.
+        run: |
+          rm -f ~/.gradle/caches/modules-2/modules-2.lock
+          rm -f ~/.gradle/caches/modules-2/gc.properties

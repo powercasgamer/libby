@@ -1,6 +1,16 @@
-# Libby (AlessioDP)
+# Libby (powercas_gamer)
 
 ## Changes in this fork
+
+### Version 2.0.0
+
+* Updated Nukkit maven repository
+* Use Gradle instead of Maven
+* Deprecated Bungeecord, Nukkit & Sponge module (feel free to pr)
+* Added java 9 module support [Credit](https://github.com/AlessioDP/libby/pull/12) by [4drian3d](https://github.com/4drian3d)
+* Added paper-plugins support. [Credit](https://github.com/AlessioDP/libby/pull/13) by [kyngs](https://github.com/kyngs)
+* Dropped support for anything under Java 17
+* Updated dependencies
 
 ### Version 1.1.5
 
@@ -64,16 +74,16 @@ who self-host their plugins on servers with limited bandwidth.
 
 Firstly, add the maven artifact to your `pom.xml`
 ```xml
-<!-- Libby (AlessioDP) Repository -->
+<!-- Libby (powercas_gamer) Repository -->
 <repository>
-  <id>AlessioDP</id>
-  <url>https://repo.alessiodp.com/releases/</url>
+  <id>deltapvp</id>
+  <url>https://repo.deltapvp.net/</url>
 </repository>
 
 <dependency>
-    <groupId>net.byteflux</groupId>
+    <groupId>org.mineorbit.libby</groupId>
     <artifactId>libby-bukkit</artifactId> <!-- Replace bukkit if you're using another platform -->
-    <version>1.1.5</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
@@ -85,8 +95,8 @@ Remember to **always** relocate Libby to avoid conflicts
     <configuration>
         <relocations>
             <relocation>
-                <pattern>net.byteflux.libby</pattern>
-                <shadedPattern>yourPackage.libs.net.byteflux.libby</shadedPattern>
+                <pattern>org.mineorbit.libby</pattern>
+                <shadedPattern>yourPackage.libs.org.mineorbit.libby</shadedPattern>
             </relocation>
         </relocations>
     </configuration>
@@ -161,9 +171,10 @@ libraryManager.loadLibrary(lib);
 
 Special thanks to:
 
-* [Luck](https://github.com/lucko) for [LuckPerms](https://github.com/lucko/LuckPerms)
+* [Luck](https://github.com/lucko) for [LuckPerms](https://github.com/LuckPerms/LuckPerms)
   and its dependency management system which was the original inspiration for this project
   and another thanks for [jar-relocator](https://github.com/lucko/jar-relocator) which is
   used by Libby to perform jar relocations.
 * [Glare](https://github.com/darbyjack) for convincing me (Byteflux) that I should publish this
   library instead of letting it sit around collecting dust :)
+* All other contributors to this project (and forks of it)
