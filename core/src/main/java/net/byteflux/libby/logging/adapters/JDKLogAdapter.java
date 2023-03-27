@@ -34,10 +34,18 @@ public class JDKLogAdapter implements LogAdapter {
     @Override
     public void log(final LogLevel level, final String message) {
         switch (requireNonNull(level, "level")) {
-            case DEBUG -> this.logger.log(Level.FINE, message);
-            case INFO -> this.logger.log(Level.INFO, message);
-            case WARN -> this.logger.log(Level.WARNING, message);
-            case ERROR -> this.logger.log(Level.SEVERE, message);
+            case DEBUG:
+                this.logger.log(Level.FINE, message);
+                break;
+            case INFO:
+                this.logger.log(Level.INFO, message);
+                break;
+            case WARN:
+                this.logger.log(Level.WARNING, message);
+                break;
+            case ERROR:
+                this.logger.log(Level.SEVERE, message);
+                break;
         }
     }
 
@@ -52,10 +60,18 @@ public class JDKLogAdapter implements LogAdapter {
     @Override
     public void log(final LogLevel level, final String message, final Throwable throwable) {
         switch (requireNonNull(level, "level")) {
-            case DEBUG -> this.logger.log(Level.FINE, message, throwable);
-            case INFO -> this.logger.log(Level.INFO, message, throwable);
-            case WARN -> this.logger.log(Level.WARNING, message, throwable);
-            case ERROR -> this.logger.log(Level.SEVERE, message, throwable);
+            case DEBUG:
+                this.logger.log(Level.FINE, message, throwable);
+                break;
+            case INFO:
+                this.logger.log(Level.INFO, message, throwable);
+                break;
+            case WARN:
+                this.logger.log(Level.WARNING, message, throwable);
+                break;
+            case ERROR:
+                this.logger.log(Level.SEVERE, message, throwable);
+                break;
         }
     }
 }

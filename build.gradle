@@ -22,10 +22,18 @@ subprojects {
     indra {
         mitLicense()
         github("powercasgamer", "libby")
-        javaVersions {
-            testWith(17, 19)
-            target(17)
-            minimumToolchain(19)
+        if (project.name.endsWithAny("paper", "velocity")) {
+            javaVersions {
+                testWith(17, 19)
+                target(17)
+                minimumToolchain(19)
+            }
+        } else {
+            javaVersions {
+                testWith(11, 17, 19)
+                target(11)
+                minimumToolchain(19)
+            }
         }
 
         configurePublications {

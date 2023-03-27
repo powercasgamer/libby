@@ -32,10 +32,18 @@ public class SLF4JLogAdapter implements LogAdapter {
     @Override
     public void log(final LogLevel level, final String message) {
         switch (requireNonNull(level, "level")) {
-            case DEBUG -> this.logger.debug(message);
-            case INFO -> this.logger.info(message);
-            case WARN -> this.logger.warn(message);
-            case ERROR -> this.logger.error(message);
+            case DEBUG:
+                this.logger.debug(message);
+                break;
+            case INFO:
+                this.logger.info(message);
+                break;
+            case WARN:
+                this.logger.warn(message);
+                break;
+            case ERROR:
+                this.logger.error(message);
+                break;
         }
     }
 
@@ -50,10 +58,18 @@ public class SLF4JLogAdapter implements LogAdapter {
     @Override
     public void log(final LogLevel level, final String message, final Throwable throwable) {
         switch (requireNonNull(level, "level")) {
-            case DEBUG -> this.logger.debug(message, throwable);
-            case INFO -> this.logger.info(message, throwable);
-            case WARN -> this.logger.warn(message, throwable);
-            case ERROR -> this.logger.error(message, throwable);
+            case DEBUG:
+                this.logger.debug(message, throwable);
+                break;
+            case INFO:
+                this.logger.info(message, throwable);
+                break;
+            case WARN:
+                this.logger.warn(message, throwable);
+                break;
+            case ERROR:
+                this.logger.error(message, throwable);
+                break;
         }
     }
 }

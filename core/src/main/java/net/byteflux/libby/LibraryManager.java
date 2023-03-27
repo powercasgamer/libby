@@ -54,6 +54,7 @@ import static java.util.Objects.requireNonNull;
  * @see Library
  */
 public abstract class LibraryManager {
+
     /**
      * Wrapped plugin logger
      */
@@ -208,7 +209,7 @@ public abstract class LibraryManager {
      * @since 2.0.0
      */
     public void addSonatype(final int alt) {
-        addRepository(Repositories.SONATYPE_ALT.formatted(alt));
+        addRepository(String.format(Repositories.SONATYPE_ALT, alt));
     }
 
     /**
