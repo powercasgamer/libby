@@ -1,10 +1,8 @@
 package net.byteflux.libby;
 
-import com.google.inject.Inject;
 import net.byteflux.libby.classloader.URLClassLoaderHelper;
-import net.byteflux.libby.logging.adapters.SLF4JLogAdapter;
-import org.slf4j.Logger;
-import org.spongepowered.api.config.ConfigDir;
+import net.byteflux.libby.logging.adapters.Log4jLogAdapter;
+import org.apache.logging.log4j.Logger;
 
 import java.net.URLClassLoader;
 import java.nio.file.Path;
@@ -15,6 +13,13 @@ import static java.util.Objects.requireNonNull;
  * A runtime dependency manager for Sponge plugins.
  */
 public class SpongeLibraryManager<T> extends LibraryManager {
+
+    /**
+     * The plugin instance required by the plugin manager to add files to the
+     * plugin's classpath
+     */
+    private final T plugin;
+
 
     /**
      * Plugin classpath helper
@@ -28,11 +33,30 @@ public class SpongeLibraryManager<T> extends LibraryManager {
      * @param dataDirectory plugin's data directory
      * @param plugin        the plugin to manage
      * @param directoryName download directory name
+     * @since 2.0.1
      */
-    @Inject
-    private SpongeLibraryManager(final Logger logger, @ConfigDir(sharedRoot = false) final Path dataDirectory, final T plugin, final String directoryName) {
-        super(new SLF4JLogAdapter(logger), dataDirectory, directoryName);
+    public SpongeLibraryManager(final Logger logger,
+                                  final Path dataDirectory,
+                                  final T plugin,
+                                  final String directoryName) {
+
+        super(new Log4jLogAdapter(logger), dataDirectory, directoryName);
+        this.plugin = requireNonNull(plugin, "plugin");
         this.classLoader = new URLClassLoaderHelper((URLClassLoader) requireNonNull(plugin, "plugin").getClass().getClassLoader(), this);
+    }
+
+    /**
+     * Creates a new Sponge library manager.
+     *
+     * @param logger        the plugin logger
+     * @param dataDirectory plugin's data directory
+     * @param plugin        the plugin to manage
+     * @since 2.0.1
+     */
+    public SpongeLibraryManager(final Logger logger,
+                                  final Path dataDirectory,
+                                  final T plugin) {
+        this(logger, dataDirectory, plugin, "libs");
     }
 
     /**

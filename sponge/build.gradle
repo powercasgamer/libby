@@ -1,5 +1,5 @@
 dependencies {
     api(projects.libbyCore)
-    api(projects.libbySlf4j)
+    api(projects.libbyLog4j)
     compileOnly(libs.sponge.api)
 }

@@ -5,8 +5,9 @@ indra = "3.1.0-SNAPSHOT"
 bungeecord = "1.19-R0.1-SNAPSHOT"
 bukkit = "1.19.4-R0.1-SNAPSHOT"
 velocity = "3.2.0-SNAPSHOT"
-sponge = "7.3.0"
+sponge = "8.0.0"
 nukkit = "1.0-SNAPSHOT"
+log4j = "2.20.0"
 
 [libraries]
 velocity = { module = "com.velocitypowered:velocity-api", version.ref = "velocity" }
@@ -16,6 +17,7 @@ spigot = { module = "org.spigotmc:spigot-api", version.ref = "bukkit" }
 bungeecord = { module = "net.md-5:bungeecord-api", version.ref = "bungeecord" }
 sponge-api = { module = "org.spongepowered:spongeapi", version.ref = "sponge" }
 nukkit = { module = "cn.nukkit:nukkit", version.ref = "nukkit" }
+log4j-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
 
 [plugins]
 titan = { id = "net.deltapvp.titan", version.ref = "titan" }

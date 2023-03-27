@@ -27,7 +27,8 @@ sequenceOf(
     "paper",
     "nukkit",
     "sponge",
-    "slf4j"
+    "slf4j",
+    "log4j"
 ).forEach {
     include("libby-$it")
     project(":libby-$it").projectDir = file(it)

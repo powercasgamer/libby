@@ -1,0 +1,4 @@
+dependencies {
+    api(projects.libbyCore)
+    compileOnly(libs.log4j.api)
+}
