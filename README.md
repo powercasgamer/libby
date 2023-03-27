@@ -2,6 +2,11 @@
 
 ## Changes in this fork
 
+### Version 2.0.1
+
+* Update sponge to v8
+* Add log4j log adapter
+
 ### Version 2.0.0
 
 * Updated Nukkit maven repository
