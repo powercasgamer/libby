@@ -107,6 +107,9 @@ Then, create a new LibraryManager instance
 // Create a library manager for a Bukkit/Spigot plugin
 BukkitLibraryManager bukkitLibraryManager = new BukkitLibraryManager(plugin);
 
+// Create a library manager for a Paper plugin
+PaperLibraryManager paperLibraryManager = new PaperLibraryManager(plugin);
+
 // Create a library manager for a Bungee plugin
 BungeeLibraryManager bungeeLibraryManager = new BungeeLibraryManager(plugin);
 
