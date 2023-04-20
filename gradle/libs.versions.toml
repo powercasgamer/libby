@@ -1,6 +1,6 @@
 [versions]
 annotations = "24.0.1"
-titan = "1.1.13"
+titan = "1.1.19"
 indra = "3.1.0-SNAPSHOT"
 bungeecord = "1.19-R0.1-SNAPSHOT"
 bukkit = "1.19.4-R0.1-SNAPSHOT"
