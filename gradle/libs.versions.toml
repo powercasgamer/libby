@@ -5,7 +5,7 @@ indra = "3.1.0-SNAPSHOT"
 bungeecord = "1.19-R0.1-SNAPSHOT"
 bukkit = "1.19.4-R0.1-SNAPSHOT"
 velocity = "3.2.0-SNAPSHOT"
-sponge = "8.1.0"
+sponge = "9.0.0"
 nukkit = "1.0-SNAPSHOT"
 log4j = "2.20.0"
 
