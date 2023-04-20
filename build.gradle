@@ -7,6 +7,13 @@ plugins {
 
 group("net.deltapvp.libby")
 
+repositories {
+    maven {
+        name = "delta"
+        url = uri("https://repo.deltapvp.net/")
+    }
+}
+
 subprojects {
     apply plugin: "net.kyori.indra"
     apply plugin: "net.kyori.indra.publishing"

@@ -2,13 +2,7 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         mavenCentral()
-        maven("https://repo.stellardrift.ca/repository/snapshots/") {
-            mavenContent {
-                snapshotsOnly()
-            }
-        }
         maven("https://repo.deltapvp.net/")
-        mavenLocal()
     }
 }
 
