@@ -6,6 +6,8 @@
 
 * Update sponge to v8
 * Add log4j log adapter
+* Updated gradle to 8.1.1
+* Added convenience methods to add a Collection of libraries or repositories
 
 ### Version 2.0.0
 
