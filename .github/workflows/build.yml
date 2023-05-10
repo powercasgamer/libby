@@ -53,10 +53,10 @@ jobs:
             ~/.gradle/wrapper
             ~/.gradle/notifications
             ~/.gradle/jdks
+            ~/.gradle/caches/paperweight*
             .gradle/loom-cache
             .gradle/caches/VanillaGradle
-            .gradle/caches/paperweight
-            */.gradle/caches/paperweight
+            .gradle/caches/paperweight*
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/libs.versions.*', '**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-deltapvp-

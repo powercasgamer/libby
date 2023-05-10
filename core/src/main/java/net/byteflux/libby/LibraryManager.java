@@ -184,6 +184,20 @@ public abstract class LibraryManager {
     }
 
     /**
+     * Adds a {@link Collection} of repository URLs to this library manager.
+     * <p>
+     * Artifacts will be resolved using this repository when attempts to locate
+     * the artifact through previously added repositories are all unsuccessful.
+     *
+     * @param urls repository URL to add
+     */
+    public void addRepositories(@NotNull final Collection<String> urls) {
+        for (final String url : urls) {
+            addRepository(url);
+        }
+    }
+
+    /**
      * Adds the current user's local Maven repository.
      */
     public void addMavenLocal() {
@@ -224,7 +238,7 @@ public abstract class LibraryManager {
     @ApiStatus.ScheduledForRemoval(inVersion = "2.1.0")
     @ApiStatus.Obsolete
     public void addJCenter() {
-        throw new UnsupportedOperationException("JCenter is being shut down. Use another repository.");
+        throw new UnsupportedOperationException("JCenter is shut down. Use another repository.");
     }
 
     /**
@@ -453,6 +467,24 @@ public abstract class LibraryManager {
             addToIsolatedClasspath(library, file);
         } else {
             addToClasspath(file);
+        }
+    }
+
+    /**
+     * Loads a {@link Collection} of {@link Library}'s jar into the plugin's classpath. If the library jar
+     * doesn't exist locally, it will be downloaded.
+     * <p>
+     * If the provided library has any relocations, they will be applied to
+     * create a relocated jar and the relocated jar will be loaded instead.
+     *
+     * @param libraries the libraries to load
+     * @see #loadLibrary(Library)
+     * @since 2.0.1
+     */
+    @ApiStatus.AvailableSince("2.0.1")
+    public void loadLibraries(@NotNull final Collection<Library> libraries) {
+        for (final Library library : libraries) {
+            loadLibrary(library);
         }
     }
 }
