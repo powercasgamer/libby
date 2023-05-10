@@ -186,11 +186,13 @@ public abstract class LibraryManager {
     /**
      * Adds a {@link Collection} of repository URLs to this library manager.
      * <p>
-     * Artifacts will be resolved using this repository when attempts to locate
+     * Artifacts will be resolved using these repositories when attempts to locate
      * the artifact through previously added repositories are all unsuccessful.
      *
-     * @param urls repository URL to add
+     * @param urls repository URLs to add
+     * @since 2.0.1
      */
+    @ApiStatus.AvailableSince("2.0.1")
     public void addRepositories(@NotNull final Collection<String> urls) {
         for (final String url : urls) {
             addRepository(url);
