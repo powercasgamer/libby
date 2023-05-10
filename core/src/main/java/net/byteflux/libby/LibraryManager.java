@@ -200,6 +200,22 @@ public abstract class LibraryManager {
     }
 
     /**
+     * Adds an array of repository URLs to this library manager.
+     * <p>
+     * Artifacts will be resolved using these repositories when attempts to locate
+     * the artifact through previously added repositories are all unsuccessful.
+     *
+     * @param urls repository URLs to add
+     * @since 2.0.1
+     */
+    @ApiStatus.AvailableSince("2.0.1")
+    public void addRepositories(@NotNull final String... urls) {
+        for (final String url : urls) {
+            addRepository(url);
+        }
+    }
+
+    /**
      * Adds the current user's local Maven repository.
      */
     public void addMavenLocal() {
@@ -473,7 +489,7 @@ public abstract class LibraryManager {
     }
 
     /**
-     * Loads a {@link Collection} of {@link Library}'s jar into the plugin's classpath. If the library jar
+     * Loads a {@link Collection} of {@link Library}'s jars into the plugin's classpath. If the library jar
      * doesn't exist locally, it will be downloaded.
      * <p>
      * If the provided library has any relocations, they will be applied to
@@ -485,6 +501,24 @@ public abstract class LibraryManager {
      */
     @ApiStatus.AvailableSince("2.0.1")
     public void loadLibraries(@NotNull final Collection<Library> libraries) {
+        for (final Library library : libraries) {
+            loadLibrary(library);
+        }
+    }
+
+    /**
+     * Loads an array of {@link Library}'s jars into the plugin's classpath. If the library jar
+     * doesn't exist locally, it will be downloaded.
+     * <p>
+     * If the provided library has any relocations, they will be applied to
+     * create a relocated jar and the relocated jar will be loaded instead.
+     *
+     * @param libraries the libraries to load
+     * @see #loadLibrary(Library)
+     * @since 2.0.1
+     */
+    @ApiStatus.AvailableSince("2.0.1")
+    public void loadLibraries(@NotNull final Library... libraries) {
         for (final Library library : libraries) {
             loadLibrary(library);
         }
