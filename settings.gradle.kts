@@ -2,7 +2,7 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         mavenCentral()
-        maven("https://repo.deltapvp.net/")
+        maven("https://maven.deltapvp.net/")
     }
 }
 
