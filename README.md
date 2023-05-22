@@ -4,6 +4,8 @@
 
 ### Version 2.0.1
 
+* **Switch group id to `net.deltapvp.libby` instead of `org.mineorbit.libby`**
+
 * Update sponge to v8
 * Add log4j log adapter
 * Updated gradle to 8.1.1
@@ -83,11 +85,11 @@ Firstly, add the maven artifact to your `pom.xml`
 <!-- Libby (powercas_gamer) Repository -->
 <repository>
   <id>deltapvp</id>
-  <url>https://repo.deltapvp.net/</url>
+  <url>https://maven.deltapvp.net/</url>
 </repository>
 
 <dependency>
-    <groupId>org.mineorbit.libby</groupId>
+    <groupId>net.deltapvp.libby</groupId>
     <artifactId>libby-bukkit</artifactId> <!-- Replace bukkit if you're using another platform -->
     <version>2.0.0</version>
 </dependency>
@@ -101,8 +103,8 @@ Remember to **always** relocate Libby to avoid conflicts
     <configuration>
         <relocations>
             <relocation>
-                <pattern>org.mineorbit.libby</pattern>
-                <shadedPattern>yourPackage.libs.org.mineorbit.libby</shadedPattern>
+                <pattern>net.deltapvp.libby</pattern>
+                <shadedPattern>yourPackage.libs.net.deltapvp.libby</shadedPattern>
             </relocation>
         </relocations>
     </configuration>
