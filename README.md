@@ -80,6 +80,22 @@ who self-host their plugins on servers with limited bandwidth.
 
 ### Usage
 
+<details><summary>Gradle Example</summary>
+Firstly, add the maven artifact to your `build.gradle(.kts)`
+```groovy
+repositories {
+    maven {
+        url 'https://maven.deltapvp.net/'
+    }
+}
+
+dependencies {
+    implementation 'net.deltapvp.libby:libby-bukkit:2.0.1' // Replace bukkit if you're using another platform
+}
+```
+</details>
+
+<details><summary>Maven Example</summary>
 Firstly, add the maven artifact to your `pom.xml`
 ```xml
 <!-- Libby (powercas_gamer) Repository -->
@@ -91,7 +107,7 @@ Firstly, add the maven artifact to your `pom.xml`
 <dependency>
     <groupId>net.deltapvp.libby</groupId>
     <artifactId>libby-bukkit</artifactId> <!-- Replace bukkit if you're using another platform -->
-    <version>2.0.0</version>
+    <version>2.0.1</version>
 </dependency>
 ```
 
@@ -110,6 +126,7 @@ Remember to **always** relocate Libby to avoid conflicts
     </configuration>
 </plugin>
 ```
+</details>
 
 Then, create a new LibraryManager instance
 ```java
