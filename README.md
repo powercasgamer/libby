@@ -81,6 +81,7 @@ who self-host their plugins on servers with limited bandwidth.
 ### Usage
 
 <details><summary>Gradle Example</summary>
+
 Firstly, add the maven artifact to your `build.gradle(.kts)`
 ```groovy
 repositories {
@@ -97,6 +98,7 @@ dependencies {
 
 <details><summary>Maven Example</summary>
 Firstly, add the maven artifact to your `pom.xml`
+
 ```xml
 <!-- Libby (powercas_gamer) Repository -->
 <repository>
