@@ -36,7 +36,7 @@ jobs:
           chmod +x gradlew
 
       - name: "validate gradle wrapper"
-        uses: "gradle/wrapper-validation-action@v1"
+        uses: gradle/wrapper-validation-action@v1
 
       - name: "Setup JDK ${{ matrix.java }}"
         uses: actions/setup-java@v3
@@ -62,7 +62,7 @@ jobs:
             ${{ runner.os }}-deltapvp-
 
       - name: "run gradle build"
-        uses: "gradle/gradle-build-action@v2"
+        uses: gradle/gradle-build-action@v2
         with:
           cache-read-only: "${{ !startsWith(github.ref, 'refs/heads/updated/') || github.event_name == 'pull_request' }}"
           arguments: "build --stacktrace"

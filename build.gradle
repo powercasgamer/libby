@@ -12,10 +12,6 @@ repositories {
         name = "delta-new"
         url = uri("https://maven.deltapvp.net/")
     }
-    maven {
-        name = "delta"
-        url = uri("https://repo.deltapvp.net/")
-    }
 }
 
 subprojects {

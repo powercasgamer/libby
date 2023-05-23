@@ -256,7 +256,7 @@ public abstract class LibraryManager {
     @ApiStatus.ScheduledForRemoval(inVersion = "2.1.0")
     @ApiStatus.Obsolete
     public void addJCenter() {
-        throw new UnsupportedOperationException("JCenter is shut down. Use another repository.");
+        throw new UnsupportedOperationException("JCenter has shut down. Use another repository.");
     }
 
     /**
@@ -312,7 +312,7 @@ public abstract class LibraryManager {
                         out.write(buf, 0, len);
                     }
                 } catch (final SocketTimeoutException e) {
-                    this.logger.warn("Download timed out: " + connection.getURL());
+                    this.logger.warn("Download timed out: " + connection.getURL(), e);
                     return null;
                 }
 
@@ -323,11 +323,11 @@ public abstract class LibraryManager {
             throw new IllegalArgumentException(e);
         } catch (final IOException e) {
             if (e instanceof FileNotFoundException) {
-                this.logger.debug("File not found: " + url);
+                this.logger.debug("File not found: " + url, e);
             } else if (e instanceof SocketTimeoutException) {
-                this.logger.debug("Connect timed out: " + url);
+                this.logger.debug("Connect timed out: " + url, e);
             } else if (e instanceof UnknownHostException) {
-                this.logger.debug("Unknown host: " + url);
+                this.logger.debug("Unknown host: " + url, e);
             } else {
                 this.logger.debug("Unexpected IOException", e);
             }
@@ -409,10 +409,13 @@ public abstract class LibraryManager {
             }
         } catch (final IOException e) {
             throw new UncheckedIOException(e);
+        } catch (final Exception e) {
+            throw new RuntimeException("Failed to download library '" + library + "'", e);
         } finally {
             try {
                 Files.deleteIfExists(out);
-            } catch (final IOException ignored) {
+            } catch (final IOException exc) {
+                this.logger.debug("Failed to delete temporary file: " + out, exc);
             }
         }
 

@@ -1,6 +1,7 @@
 package net.byteflux.libby;
 
 import net.byteflux.libby.relocation.Relocation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Base64;
 import java.util.Collection;
@@ -35,17 +36,17 @@ public class Library {
     /**
      * Maven group ID
      */
-    private final String groupId;
+    private final @NotNull String groupId;
 
     /**
      * Maven artifact ID
      */
-    private final String artifactId;
+    private final @NotNull String artifactId;
 
     /**
      * Artifact version
      */
-    private final String version;
+    private final @NotNull String version;
 
     /**
      * Artifact classifier
@@ -92,9 +93,9 @@ public class Library {
      */
     private Library(final Collection<String> urls,
                     final String id,
-                    final String groupId,
-                    final String artifactId,
-                    final String version,
+                    final @NotNull String groupId,
+                    final @NotNull String artifactId,
+                    final @NotNull String version,
                     final String classifier,
                     final byte[] checksum,
                     final Collection<Relocation> relocations,
@@ -120,9 +121,9 @@ public class Library {
     private Library(final Collection<String> urls,
                     final Collection<String> repositories,
                     final String id,
-                    final String groupId,
-                    final String artifactId,
-                    final String version,
+                    final @NotNull String groupId,
+                    final @NotNull String artifactId,
+                    final @NotNull String version,
                     final String classifier,
                     final byte[] checksum,
                     final Collection<Relocation> relocations,
@@ -181,7 +182,7 @@ public class Library {
      *
      * @return Maven group ID
      */
-    public String getGroupId() {
+    public @NotNull String getGroupId() {
         return this.groupId;
     }
 
@@ -190,7 +191,7 @@ public class Library {
      *
      * @return Maven artifact ID
      */
-    public String getArtifactId() {
+    public @NotNull String getArtifactId() {
         return this.artifactId;
     }
 
@@ -199,7 +200,7 @@ public class Library {
      *
      * @return artifact version
      */
-    public String getVersion() {
+    public @NotNull String getVersion() {
         return this.version;
     }
 
@@ -332,17 +333,17 @@ public class Library {
         /**
          * Maven group ID
          */
-        private String groupId;
+        private @NotNull String groupId;
 
         /**
          * Maven artifact ID
          */
-        private String artifactId;
+        private @NotNull String artifactId;
 
         /**
          * Artifact version
          */
-        private String version;
+        private @NotNull String version;
 
         /**
          * Artifact classifier
@@ -405,7 +406,7 @@ public class Library {
          * @param groupId Maven group ID
          * @return this builder
          */
-        public Builder groupId(final String groupId) {
+        public Builder groupId(final @NotNull String groupId) {
             this.groupId = requireNonNull(groupId, "groupId");
             return this;
         }
@@ -416,7 +417,7 @@ public class Library {
          * @param artifactId Maven artifact ID
          * @return this builder
          */
-        public Builder artifactId(final String artifactId) {
+        public Builder artifactId(final @NotNull String artifactId) {
             this.artifactId = requireNonNull(artifactId, "artifactId");
             return this;
         }
@@ -427,7 +428,7 @@ public class Library {
          * @param version artifact version
          * @return this builder
          */
-        public Builder version(final String version) {
+        public Builder version(final @NotNull String version) {
             this.version = requireNonNull(version, "version");
             return this;
         }
