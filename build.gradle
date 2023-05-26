@@ -62,8 +62,8 @@ subprojects {
             }
         }
 
-        publishReleasesTo("drink", "https://repo.iwantadr.ink/releases/")
-        publishSnapshotsTo("drink", "https://repo.iwantadr.ink/snapshots/")
+        publishReleasesTo("drink", "https://new-repo.deltapvp.net/releases/")
+        publishSnapshotsTo("drink", "https://new-repo.deltapvp.net/snapshots/")
     }
 
     indraCrossdoc {
