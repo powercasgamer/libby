@@ -7,11 +7,13 @@ plugins {
 
 group("net.deltapvp.libby")
 
-repositories {
-    mavenCentral()
-    maven {
-        name = "delta-new"
-        url = uri("https://maven.deltapvp.net/")
+allprojects {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "delta-new"
+            url = uri("https://maven.deltapvp.net/")
+        }
     }
 }
 

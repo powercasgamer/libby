@@ -75,8 +75,8 @@ public class RelocationHelper {
             Library.builder()
                    .groupId("me.lucko")
                    .artifactId("jar-relocator")
-                   .version("1.6")
-                   .checksum("0EkdPKSRotTUGvB7nEy5HNaB4nxTxlQOhcmWJsRyhlg=")
+                   .version("1.7")
+                   .checksum("b30RhOF6kHiHl+O5suNLh/+eAr1iOFEFLXhwkHHDu4I=")
                    .repository(Repositories.MAVEN_CENTRAL)
                    .build()
         ));
