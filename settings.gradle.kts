@@ -19,7 +19,7 @@ sequenceOf(
     "bungee",
     "velocity",
     "paper",
-    "nukkit",
+//    "nukkit",
     "sponge",
     "slf4j",
     "log4j"
