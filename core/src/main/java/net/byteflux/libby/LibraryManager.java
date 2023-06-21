@@ -12,6 +12,8 @@ import org.apache.maven.artifact.repository.metadata.Versioning;
 import org.apache.maven.artifact.repository.metadata.io.xpp3.MetadataXpp3Reader;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -104,7 +106,7 @@ public abstract class LibraryManager {
      *
      * @param file the file to add
      */
-    protected abstract void addToClasspath(Path file);
+    protected abstract void addToClasspath(@NotNull final Path file);
 
     /**
      * Adds a file to the isolated class loader
@@ -128,7 +130,7 @@ public abstract class LibraryManager {
      *
      * @param libraryId the id of the library
      */
-    public IsolatedClassLoader getIsolatedClassLoaderOf(@NotNull final String libraryId) {
+    public @Nullable IsolatedClassLoader getIsolatedClassLoaderOf(@NotNull final String libraryId) {
         return this.isolatedLibraries.get(libraryId);
     }
 
@@ -137,7 +139,7 @@ public abstract class LibraryManager {
      *
      * @return log level
      */
-    public LogLevel getLogLevel() {
+    public @NotNull LogLevel getLogLevel() {
         return this.logger.getLevel();
     }
 
@@ -165,7 +167,7 @@ public abstract class LibraryManager {
      *
      * @return current repositories
      */
-    public Collection<String> getRepositories() {
+    public @NotNull Collection<@Nullable String> getRepositories() {
         final List<String> urls;
         synchronized (this.repositories) {
             urls = new LinkedList<>(this.repositories);
@@ -199,7 +201,7 @@ public abstract class LibraryManager {
      * @since 2.0.1
      */
     @ApiStatus.AvailableSince("2.0.1")
-    public void addRepositories(@NotNull final Collection<String> urls) {
+    public void addRepositories(@NotNull final Collection<@NotNull String> urls) {
         for (final String url : urls) {
             addRepository(url);
         }
@@ -215,7 +217,7 @@ public abstract class LibraryManager {
      * @since 2.0.1
      */
     @ApiStatus.AvailableSince("2.0.1")
-    public void addRepositories(@NotNull final String... urls) {
+    public void addRepositories(@NotNull final String @NotNull ... urls) {
         for (final String url : urls) {
             addRepository(url);
         }
@@ -280,7 +282,7 @@ public abstract class LibraryManager {
      * @param library the library to resolve
      * @return download URLs
      */
-    public Collection<String> resolveLibrary(@NotNull final Library library) {
+    public @NotNull Collection<@Nullable String> resolveLibrary(@NotNull final Library library) {
         final Set<String> urls = new LinkedHashSet<>(requireNonNull(library, "library").getUrls());
         final boolean snapshot = library.getVersion().endsWith("-SNAPSHOT");
 
@@ -306,18 +308,12 @@ public abstract class LibraryManager {
                                     .build(), HttpResponse.BodyHandlers.ofInputStream());
                     if (response.statusCode() != 200) continue;
                     final Metadata metadata = reader.read(response.body());
-//                    System.out.println(metadata);
-//                    System.out.println(metadata.getVersion());
-//                    System.out.println(metadata.getVersioning().getLastUpdated());
                     final Versioning versioning = metadata.getVersioning();
                     final Snapshot snapshat = versioning.getSnapshot();
-//                    System.out.println("path: " + repository + pathv3 + "/" + library.getArtifactId() + "-" + library.getVersion().replace("-SNAPSHOT", "") + "-" + snapshat.getTimestamp() + "-" + snapshat.getBuildNumber() + ".jar");
                     urls.add(repository + pathv3 + "/" + library.getArtifactId() + "-" + library.getVersion().replace("-SNAPSHOT", "") + "-" + snapshat.getTimestamp() + "-" + snapshat.getBuildNumber() + ".jar");
-//                    urls.add(repository + library.getPath());
                 }
 
                 for (final String repository : getRepositories()) {
-//                    System.out.println(repository + pathv2);
                     final HttpResponse<InputStream> response = HttpClient.newHttpClient().send(
                             HttpRequest.newBuilder()
                                     .GET()
@@ -325,14 +321,9 @@ public abstract class LibraryManager {
                                     .build(), HttpResponse.BodyHandlers.ofInputStream());
                     if (response.statusCode() != 200) continue;
                     final Metadata metadata = reader.read(response.body());
-//                    System.out.println(metadata);
-//                    System.out.println(metadata.getVersion());
-//                    System.out.println(metadata.getVersioning().getLastUpdated());
                     final Versioning versioning = metadata.getVersioning();
                     final Snapshot snapshat = versioning.getSnapshot();
-//                    System.out.println("path: " + repository + pathv3 + "/" + library.getArtifactId() + "-" + library.getVersion().replace("-SNAPSHOT", "") + "-" + snapshat.getTimestamp() + "-" + snapshat.getBuildNumber() + ".jar");
                     urls.add(repository + pathv3 + "/" + library.getArtifactId() + "-" + library.getVersion().replace("-SNAPSHOT", "") + "-" + snapshat.getTimestamp() + "-" + snapshat.getBuildNumber() + ".jar");
-//                    urls.add(repository + library.getPath());
                 }
 
             } catch (final Exception exc) {
@@ -413,7 +404,7 @@ public abstract class LibraryManager {
      * @return local file path to library
      * @see #loadLibrary(Library)
      */
-    public Path downloadLibrary(@NotNull final Library library) {
+    public @UnknownNullability Path downloadLibrary(@NotNull final Library library) {
         final Path file = this.saveDirectory.resolve(requireNonNull(library, "library").getPath());
         if (Files.exists(file)) {
             return file;
@@ -489,7 +480,7 @@ public abstract class LibraryManager {
      * @return the relocated file
      * @see RelocationHelper#relocate(Path, Path, Collection)
      */
-    private Path relocate(@NotNull final Path in, @NotNull final String out, @NotNull final Collection<Relocation> relocations) {
+    private @NotNull Path relocate(@NotNull final Path in, @NotNull final String out, @NotNull final Collection<@Nullable Relocation> relocations) {
         requireNonNull(in, "in");
         requireNonNull(out, "out");
         requireNonNull(relocations, "relocations");

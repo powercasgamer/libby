@@ -3,6 +3,7 @@ package net.byteflux.libby;
 import net.byteflux.libby.classloader.URLClassLoaderHelper;
 import net.byteflux.libby.logging.adapters.Log4jLogAdapter;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.URLClassLoader;
 import java.nio.file.Path;
@@ -65,7 +66,7 @@ public class SpongeLibraryManager<T> extends LibraryManager {
      * @param file the file to add
      */
     @Override
-    protected void addToClasspath(final Path file) {
+    protected void addToClasspath(final @NotNull Path file) {
         this.classLoader.addToClasspath(file);
     }
 }

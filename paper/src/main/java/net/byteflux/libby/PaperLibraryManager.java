@@ -3,6 +3,7 @@ package net.byteflux.libby;
 import net.byteflux.libby.classloader.URLClassLoaderHelper;
 import net.byteflux.libby.logging.adapters.JDKLogAdapter;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.net.URLClassLoader;
@@ -80,7 +81,7 @@ public class PaperLibraryManager extends LibraryManager {
      * @param file the file to add
      */
     @Override
-    protected void addToClasspath(final Path file) {
+    protected void addToClasspath(final @NotNull Path file) {
         this.classLoader.addToClasspath(file);
     }
 }

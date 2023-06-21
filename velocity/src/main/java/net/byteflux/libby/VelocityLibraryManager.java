@@ -2,6 +2,7 @@ package net.byteflux.libby;
 
 import com.velocitypowered.api.plugin.PluginManager;
 import net.byteflux.libby.logging.adapters.SLF4JLogAdapter;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.nio.file.Path;
@@ -65,7 +66,7 @@ public class VelocityLibraryManager<T> extends LibraryManager {
      * @param file the file to add
      */
     @Override
-    protected void addToClasspath(final Path file) {
+    protected void addToClasspath(final @NotNull Path file) {
         this.pluginManager.addToClasspath(this.plugin, file);
     }
 }
