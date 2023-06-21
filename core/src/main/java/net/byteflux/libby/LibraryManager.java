@@ -13,8 +13,17 @@ import org.apache.maven.artifact.repository.metadata.io.xpp3.MetadataXpp3Reader;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
-import java.net.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -23,7 +32,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
@@ -293,7 +311,7 @@ public abstract class LibraryManager {
 //                    System.out.println(metadata.getVersioning().getLastUpdated());
                     final Versioning versioning = metadata.getVersioning();
                     final Snapshot snapshat = versioning.getSnapshot();
-//                    System.out.println("bitches: " + repository + pathv3 + "/" + library.getArtifactId() + "-" + library.getVersion().replace("-SNAPSHOT", "") + "-" + snapshat.getTimestamp() + "-" + snapshat.getBuildNumber() + ".jar");
+//                    System.out.println("path: " + repository + pathv3 + "/" + library.getArtifactId() + "-" + library.getVersion().replace("-SNAPSHOT", "") + "-" + snapshat.getTimestamp() + "-" + snapshat.getBuildNumber() + ".jar");
                     urls.add(repository + pathv3 + "/" + library.getArtifactId() + "-" + library.getVersion().replace("-SNAPSHOT", "") + "-" + snapshat.getTimestamp() + "-" + snapshat.getBuildNumber() + ".jar");
 //                    urls.add(repository + library.getPath());
                 }
@@ -312,7 +330,7 @@ public abstract class LibraryManager {
 //                    System.out.println(metadata.getVersioning().getLastUpdated());
                     final Versioning versioning = metadata.getVersioning();
                     final Snapshot snapshat = versioning.getSnapshot();
-//                    System.out.println("bitches: " + repository + pathv3 + "/" + library.getArtifactId() + "-" + library.getVersion().replace("-SNAPSHOT", "") + "-" + snapshat.getTimestamp() + "-" + snapshat.getBuildNumber() + ".jar");
+//                    System.out.println("path: " + repository + pathv3 + "/" + library.getArtifactId() + "-" + library.getVersion().replace("-SNAPSHOT", "") + "-" + snapshat.getTimestamp() + "-" + snapshat.getBuildNumber() + ".jar");
                     urls.add(repository + pathv3 + "/" + library.getArtifactId() + "-" + library.getVersion().replace("-SNAPSHOT", "") + "-" + snapshat.getTimestamp() + "-" + snapshat.getBuildNumber() + ".jar");
 //                    urls.add(repository + library.getPath());
                 }
