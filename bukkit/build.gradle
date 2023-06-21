@@ -2,4 +2,3 @@ dependencies {
     api(projects.libbyCore)
     compileOnly(libs.spigot)
 }
-

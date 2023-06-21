@@ -268,6 +268,16 @@ public class Library {
     }
 
     /**
+     * Gets the GAV of this library.
+     *
+     * @return the GAV in the format groupId:artifactId:version
+     * @since 2.0.4
+     */
+    public String getGAV() {
+        return this.groupId + ":" + this.artifactId + ":" + this.version;
+    }
+
+    /**
      * Gets the relative path to this library's relocated jar.
      *
      * @return path to relocated artifact or null if has no relocations

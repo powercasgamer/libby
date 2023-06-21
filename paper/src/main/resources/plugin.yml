@@ -1,0 +1,4 @@
+name: LibbyTest
+api-version: 1.13
+main: net.byteflux.libby.bukkit.LibbyTestPlugin
+version: 1.0.0

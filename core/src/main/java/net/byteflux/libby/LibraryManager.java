@@ -6,34 +6,24 @@ import net.byteflux.libby.logging.Logger;
 import net.byteflux.libby.logging.adapters.LogAdapter;
 import net.byteflux.libby.relocation.Relocation;
 import net.byteflux.libby.relocation.RelocationHelper;
+import org.apache.maven.artifact.repository.metadata.Metadata;
+import org.apache.maven.artifact.repository.metadata.Snapshot;
+import org.apache.maven.artifact.repository.metadata.Versioning;
+import org.apache.maven.artifact.repository.metadata.io.xpp3.MetadataXpp3Reader;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
-import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.UnknownHostException;
+import java.io.*;
+import java.net.*;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 
@@ -69,17 +59,15 @@ public abstract class LibraryManager {
      * Maven repositories used to resolve artifacts
      */
     private final Set<String> repositories = new LinkedHashSet<>();
-
+    /**
+     * Map of isolated class loaders and theirs id
+     */
+    private final Map<String, IsolatedClassLoader> isolatedLibraries = new HashMap<>();
     /**
      * Lazily-initialized relocation helper that uses reflection to call into
      * Luck's Jar Relocator
      */
     private RelocationHelper relocator;
-
-    /**
-     * Map of isolated class loaders and theirs id
-     */
-    private final Map<String, IsolatedClassLoader> isolatedLibraries = new HashMap<>();
 
     /**
      * Creates a new library manager.
@@ -104,7 +92,7 @@ public abstract class LibraryManager {
      * Adds a file to the isolated class loader
      *
      * @param library the library to add
-     * @param file the file to add
+     * @param file    the file to add
      */
     protected void addToIsolatedClasspath(@NotNull final Library library, @NotNull final Path file) {
         final IsolatedClassLoader classLoader;
@@ -238,6 +226,7 @@ public abstract class LibraryManager {
 
     /**
      * Adds the Sonatype OSS repository.
+     *
      * @since 2.0.0
      */
     public void addSonatype(final int alt) {
@@ -275,14 +264,62 @@ public abstract class LibraryManager {
      */
     public Collection<String> resolveLibrary(@NotNull final Library library) {
         final Set<String> urls = new LinkedHashSet<>(requireNonNull(library, "library").getUrls());
+        final boolean snapshot = library.getVersion().endsWith("-SNAPSHOT");
 
-        // Try from library-declared repos first
-        for (final String repository : library.getRepositories()) {
-            urls.add(repository + library.getPath());
-        }
+        if (!snapshot) {
+            // Try from library-declared repos first
+            for (final String repository : library.getRepositories()) {
+                urls.add(repository + library.getPath());
+            }
 
-        for (final String repository : getRepositories()) {
-            urls.add(repository + library.getPath());
+            for (final String repository : getRepositories()) {
+                urls.add(repository + library.getPath());
+            }
+        } else {
+            final MetadataXpp3Reader reader = new MetadataXpp3Reader();
+            final String pathv2 = library.getPath().substring(0, library.getGAV().length()) + "/maven-metadata.xml";
+            final String pathv3 = library.getPath().substring(0, library.getGAV().length());
+            try {
+                for (final String repository : library.getRepositories()) {
+                    final HttpResponse<InputStream> response = HttpClient.newHttpClient().send(
+                            HttpRequest.newBuilder()
+                                    .GET()
+                                    .uri(URI.create(repository + pathv2))
+                                    .build(), HttpResponse.BodyHandlers.ofInputStream());
+                    if (response.statusCode() != 200) continue;
+                    final Metadata metadata = reader.read(response.body());
+//                    System.out.println(metadata);
+//                    System.out.println(metadata.getVersion());
+//                    System.out.println(metadata.getVersioning().getLastUpdated());
+                    final Versioning versioning = metadata.getVersioning();
+                    final Snapshot snapshat = versioning.getSnapshot();
+//                    System.out.println("bitches: " + repository + pathv3 + "/" + library.getArtifactId() + "-" + library.getVersion().replace("-SNAPSHOT", "") + "-" + snapshat.getTimestamp() + "-" + snapshat.getBuildNumber() + ".jar");
+                    urls.add(repository + pathv3 + "/" + library.getArtifactId() + "-" + library.getVersion().replace("-SNAPSHOT", "") + "-" + snapshat.getTimestamp() + "-" + snapshat.getBuildNumber() + ".jar");
+//                    urls.add(repository + library.getPath());
+                }
+
+                for (final String repository : getRepositories()) {
+//                    System.out.println(repository + pathv2);
+                    final HttpResponse<InputStream> response = HttpClient.newHttpClient().send(
+                            HttpRequest.newBuilder()
+                                    .GET()
+                                    .uri(URI.create(repository + pathv2))
+                                    .build(), HttpResponse.BodyHandlers.ofInputStream());
+                    if (response.statusCode() != 200) continue;
+                    final Metadata metadata = reader.read(response.body());
+//                    System.out.println(metadata);
+//                    System.out.println(metadata.getVersion());
+//                    System.out.println(metadata.getVersioning().getLastUpdated());
+                    final Versioning versioning = metadata.getVersioning();
+                    final Snapshot snapshat = versioning.getSnapshot();
+//                    System.out.println("bitches: " + repository + pathv3 + "/" + library.getArtifactId() + "-" + library.getVersion().replace("-SNAPSHOT", "") + "-" + snapshat.getTimestamp() + "-" + snapshat.getBuildNumber() + ".jar");
+                    urls.add(repository + pathv3 + "/" + library.getArtifactId() + "-" + library.getVersion().replace("-SNAPSHOT", "") + "-" + snapshat.getTimestamp() + "-" + snapshat.getBuildNumber() + ".jar");
+//                    urls.add(repository + library.getPath());
+                }
+
+            } catch (final Exception exc) {
+                throw new RuntimeException(exc);
+            }
         }
 
         return Collections.unmodifiableSet(urls);
@@ -416,6 +453,8 @@ public abstract class LibraryManager {
                 Files.deleteIfExists(out);
             } catch (final IOException exc) {
                 this.logger.debug("Failed to delete temporary file: " + out, exc);
+            } catch (final Exception exc) {
+                this.logger.error("Failed to download library '" + library + "'", exc);
             }
         }
 

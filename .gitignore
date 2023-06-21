@@ -15,6 +15,7 @@
 *_LOCAL_*.txt
 *_REMOTE_*.txt
 release.sh
+run/
 
 ### Java ###
 # Compiled class file
