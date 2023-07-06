@@ -1,9 +1,34 @@
+/*
+ * This file is part of Libby, licensed under the MIT License.
+ *
+ * Copyright (c) 2019-2023 Matthew Harris
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package net.byteflux.libby.classloader;
 
 import net.byteflux.libby.Library;
 import net.byteflux.libby.LibraryManager;
 import net.byteflux.libby.Repositories;
 import sun.misc.Unsafe;
+
+import static java.util.Objects.requireNonNull;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -17,8 +42,6 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * A reflection-based wrapper around {@link URLClassLoader} for adding URLs to
@@ -107,32 +130,6 @@ public class URLClassLoaderHelper {
         }
     }
 
-    /**
-     * Adds a URL to the class loader's classpath.
-     *
-     * @param url the URL to add
-     */
-    public void addToClasspath(final URL url) {
-        try {
-            this.addURLMethodHandle.invokeWithArguments(requireNonNull(url, "url"));
-        } catch (final Throwable e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Adds a path to the class loader's classpath.
-     *
-     * @param path the path to add
-     */
-    public void addToClasspath(final Path path) {
-        try {
-            addToClasspath(requireNonNull(path, "path").toUri().toURL());
-        } catch (final MalformedURLException e) {
-            throw new IllegalArgumentException(e);
-        }
-    }
-
     private static void openUrlClassLoaderModule() throws Exception {
         //
         // Thanks to lucko (Luck) <luck@lucko.me> for this snippet used in his own class loader
@@ -157,6 +154,32 @@ public class URLClassLoaderHelper {
         final Object thisModule = getModuleMethod.invoke(URLClassLoaderHelper.class);
 
         addOpensMethod.invoke(urlClassLoaderModule, URLClassLoader.class.getPackage().getName(), thisModule);
+    }
+
+    /**
+     * Adds a URL to the class loader's classpath.
+     *
+     * @param url the URL to add
+     */
+    public void addToClasspath(final URL url) {
+        try {
+            this.addURLMethodHandle.invokeWithArguments(requireNonNull(url, "url"));
+        } catch (final Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Adds a path to the class loader's classpath.
+     *
+     * @param path the path to add
+     */
+    public void addToClasspath(final Path path) {
+        try {
+            addToClasspath(requireNonNull(path, "path").toUri().toURL());
+        } catch (final MalformedURLException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     private MethodHandle getPrivilegedMethodHandle(final Method method) throws Exception {
@@ -189,13 +212,13 @@ public class URLClassLoaderHelper {
         // Download ByteBuddy's agent and load it through an IsolatedClassLoader
         try (final IsolatedClassLoader isolatedClassLoader = new IsolatedClassLoader()) {
             isolatedClassLoader.addPath(libraryManager.downloadLibrary(
-                Library.builder()
-                       .groupId("net.bytebuddy")
-                       .artifactId("byte-buddy-agent")
-                       .version("1.14.2")
-                       .checksum("9CjHQXtM9wMdiPH2PYdoEc6jsBWAMBe6ngbOKs3Voec=")
-                       .repository(Repositories.MAVEN_CENTRAL)
-                       .build()
+                    Library.builder()
+                            .groupId("net.bytebuddy")
+                            .artifactId("byte-buddy-agent")
+                            .version("1.14.2")
+                            .checksum("9CjHQXtM9wMdiPH2PYdoEc6jsBWAMBe6ngbOKs3Voec=")
+                            .repository(Repositories.MAVEN_CENTRAL)
+                            .build()
             ));
 
             final Class<?> byteBuddyAgent = isolatedClassLoader.loadClass("net.bytebuddy.agent.ByteBuddyAgent");

@@ -1,15 +1,38 @@
+/*
+ * This file is part of Libby, licensed under the MIT License.
+ *
+ * Copyright (c) 2019-2023 Matthew Harris
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package net.byteflux.libby;
 
 import net.byteflux.libby.relocation.Relocation;
 import org.jetbrains.annotations.NotNull;
+
+import static java.util.Objects.requireNonNull;
 
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.UUID;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * An immutable representation of a Maven artifact that can be downloaded,
@@ -148,6 +171,15 @@ public class Library {
         this.repositories = repositories != null ? Collections.unmodifiableList(new LinkedList<>(repositories)) : Collections.emptyList();
         this.relocatedPath = hasRelocations() ? path + "-relocated.jar" : null;
         this.isolatedLoad = isolatedLoad;
+    }
+
+    /**
+     * Creates a new library builder.
+     *
+     * @return new library builder
+     */
+    public static Builder builder() {
+        return new Builder();
     }
 
     /**
@@ -311,15 +343,6 @@ public class Library {
     }
 
     /**
-     * Creates a new library builder.
-     *
-     * @return new library builder
-     */
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    /**
      * Due to the constructor complexity of an immutable {@link Library},
      * instead this fluent builder is used to configure and then construct
      * a new library.
@@ -334,46 +357,38 @@ public class Library {
          * Repository URLs for this library
          */
         private final Collection<String> repositories = new LinkedList<>();
-
-        /**
-         * The library ID
-         */
-        private String id;
-
-        /**
-         * Maven group ID
-         */
-        private @NotNull String groupId;
-
-        /**
-         * Maven artifact ID
-         */
-        private @NotNull String artifactId;
-
-        /**
-         * Artifact version
-         */
-        private @NotNull String version;
-
-        /**
-         * Artifact classifier
-         */
-        private String classifier;
-
-        /**
-         * Binary SHA-256 checksum for this library's jar file
-         */
-        private byte[] checksum;
-
-        /**
-         * Isolated load
-         */
-        private boolean isolatedLoad;
-
         /**
          * Jar relocations to apply
          */
         private final Collection<Relocation> relocations = new LinkedList<>();
+        /**
+         * The library ID
+         */
+        private String id;
+        /**
+         * Maven group ID
+         */
+        private @NotNull String groupId;
+        /**
+         * Maven artifact ID
+         */
+        private @NotNull String artifactId;
+        /**
+         * Artifact version
+         */
+        private @NotNull String version;
+        /**
+         * Artifact classifier
+         */
+        private String classifier;
+        /**
+         * Binary SHA-256 checksum for this library's jar file
+         */
+        private byte[] checksum;
+        /**
+         * Isolated load
+         */
+        private boolean isolatedLoad;
 
         /**
          * Adds a direct download URL for this library.

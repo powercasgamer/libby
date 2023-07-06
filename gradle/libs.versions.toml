@@ -1,13 +1,19 @@
 [versions]
 annotations = "24.0.1"
-titan = "1.1.29"
-indra = "3.1.1"
 bungeecord = "1.19-R0.1-SNAPSHOT"
-bukkit = "1.19.4-R0.1-SNAPSHOT"
+bukkit = "1.20.1-R0.1-SNAPSHOT"
 velocity = "3.2.0-SNAPSHOT"
 sponge = "8.1.0"
 nukkit = "1.0-SNAPSHOT"
 log4j = "2.20.0"
+
+# build-logic stuff
+shadow = "8.1.1"
+run-task = "2.1.0"
+hangar-publish = "0.0.5"
+minotaur = "2.8.1"
+indra = "3.1.2"
+paperweight = "1.5.5"
 
 [libraries]
 velocity = { module = "com.velocitypowered:velocity-api", version.ref = "velocity" }
@@ -19,8 +25,17 @@ sponge-api = { module = "org.spongepowered:spongeapi", version.ref = "sponge" }
 nukkit = { module = "cn.nukkit:nukkit", version.ref = "nukkit" }
 log4j-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
 
+# build-logic stuff
+hangar-publish = { module = "io.papermc:hangar-publish-plugin", version.ref = "hangar-publish"}
+indra-common = { module = "net.kyori:indra-common", version.ref = "indra" }
+indra-crossdoc = { module = "net.kyori:indra-crossdoc", version.ref = "indra" }
+indra-spotless = { module = "net.kyori:indra-licenser-spotless", version.ref = "indra" }
+indra-git = { module = "net.kyori:indra-git", version.ref = "indra" }
+shadow = { module = "com.github.johnrengelman:shadow", version.ref = "shadow" }
+run-task = { module = "xyz.jpenilla:run-task", version.ref = "run-task" }
+
 [plugins]
-titan = { id = "net.deltapvp.titan", version.ref = "titan" }
 indra = { id = "net.kyori.indra", version.ref = "indra" }
 indra-publishing = { id = "net.kyori.indra.publishing", version.ref = "indra" }
-indra-crossdoc = { id = "net.kyori.indra.crossdoc", version.ref = "indra" }
+run-paper = { id = "xyz.jpenilla.run-paper", version.ref = "run-task" }
+hangar-publish = { id = "io.papermc.hangar-publish-plugin", version.ref = "hangar-publish" }

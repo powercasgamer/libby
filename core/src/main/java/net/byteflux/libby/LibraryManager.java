@@ -1,3 +1,26 @@
+/*
+ * This file is part of Libby, licensed under the MIT License.
+ *
+ * Copyright (c) 2019-2023 Matthew Harris
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package net.byteflux.libby;
 
 import net.byteflux.libby.classloader.IsolatedClassLoader;
@@ -15,6 +38,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
+import static java.util.Objects.requireNonNull;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,29 +48,26 @@ import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * A runtime dependency manager for plugins.
@@ -65,6 +87,10 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class LibraryManager {
 
+    static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
+            .priority(5)
+            .build();
+
     /**
      * Wrapped plugin logger
      */
@@ -79,10 +105,12 @@ public abstract class LibraryManager {
      * Maven repositories used to resolve artifacts
      */
     private final Set<String> repositories = new LinkedHashSet<>();
+
     /**
      * Map of isolated class loaders and theirs id
      */
     private final Map<String, IsolatedClassLoader> isolatedLibraries = new HashMap<>();
+
     /**
      * Lazily-initialized relocation helper that uses reflection to call into
      * Luck's Jar Relocator
@@ -96,7 +124,7 @@ public abstract class LibraryManager {
      * @param dataDirectory plugin's data directory
      * @param directoryName download directory name
      */
-    protected LibraryManager(@NotNull final LogAdapter logAdapter, @NotNull final Path dataDirectory, @NotNull final String directoryName) {
+    protected LibraryManager(final @NotNull LogAdapter logAdapter, final @NotNull Path dataDirectory, final @NotNull String directoryName) {
         this.logger = new Logger(requireNonNull(logAdapter, "logAdapter"));
         this.saveDirectory = requireNonNull(dataDirectory, "dataDirectory").toAbsolutePath().resolve(requireNonNull(directoryName, "directoryName"));
     }
@@ -106,7 +134,7 @@ public abstract class LibraryManager {
      *
      * @param file the file to add
      */
-    protected abstract void addToClasspath(@NotNull final Path file);
+    protected abstract void addToClasspath(final @NotNull Path file);
 
     /**
      * Adds a file to the isolated class loader
@@ -114,7 +142,7 @@ public abstract class LibraryManager {
      * @param library the library to add
      * @param file    the file to add
      */
-    protected void addToIsolatedClasspath(@NotNull final Library library, @NotNull final Path file) {
+    protected void addToIsolatedClasspath(final @NotNull Library library, final @NotNull Path file) {
         final IsolatedClassLoader classLoader;
         final String id = library.getId();
         if (id != null) {
@@ -130,7 +158,7 @@ public abstract class LibraryManager {
      *
      * @param libraryId the id of the library
      */
-    public @Nullable IsolatedClassLoader getIsolatedClassLoaderOf(@NotNull final String libraryId) {
+    public @Nullable IsolatedClassLoader getIsolatedClassLoaderOf(final @NotNull String libraryId) {
         return this.isolatedLibraries.get(libraryId);
     }
 
@@ -155,7 +183,7 @@ public abstract class LibraryManager {
      *
      * @param level the log level to set
      */
-    public void setLogLevel(@NotNull final LogLevel level) {
+    public void setLogLevel(final @NotNull LogLevel level) {
         this.logger.setLevel(level);
     }
 
@@ -184,7 +212,7 @@ public abstract class LibraryManager {
      *
      * @param url repository URL to add
      */
-    public void addRepository(@NotNull final String url) {
+    public void addRepository(final @NotNull String url) {
         final String repo = !requireNonNull(url, "url").isEmpty() && requireNonNull(url, "url").charAt(requireNonNull(url, "url").length() - 1) == '/' ? url : url + '/';
         synchronized (this.repositories) {
             this.repositories.add(repo);
@@ -201,7 +229,7 @@ public abstract class LibraryManager {
      * @since 2.0.1
      */
     @ApiStatus.AvailableSince("2.0.1")
-    public void addRepositories(@NotNull final Collection<@NotNull String> urls) {
+    public void addRepositories(final @NotNull Collection<@NotNull String> urls) {
         for (final String url : urls) {
             addRepository(url);
         }
@@ -217,7 +245,7 @@ public abstract class LibraryManager {
      * @since 2.0.1
      */
     @ApiStatus.AvailableSince("2.0.1")
-    public void addRepositories(@NotNull final String @NotNull ... urls) {
+    public void addRepositories(final @NotNull String @NotNull ... urls) {
         for (final String url : urls) {
             addRepository(url);
         }
@@ -227,7 +255,7 @@ public abstract class LibraryManager {
      * Adds the current user's local Maven repository.
      */
     public void addMavenLocal() {
-        addRepository(Paths.get(System.getProperty("user.home")).resolve(".m2/repository").toUri().toString());
+        addRepository(Path.of(System.getProperty("user.home")).resolve(".m2/repository").toUri().toString());
     }
 
     /**
@@ -261,7 +289,10 @@ public abstract class LibraryManager {
      *
      * @deprecated This repository is being shut down. Use another repository
      */
-    @Deprecated(forRemoval = true, since = "2.0.0")
+    @Deprecated(
+            forRemoval = true,
+            since = "2.0.0"
+    )
     @ApiStatus.ScheduledForRemoval(inVersion = "2.1.0")
     @ApiStatus.Obsolete
     public void addJCenter() {
@@ -282,17 +313,15 @@ public abstract class LibraryManager {
      * @param library the library to resolve
      * @return download URLs
      */
-    public @NotNull Collection<@Nullable String> resolveLibrary(@NotNull final Library library) {
+    public @NotNull Collection<@Nullable String> resolveLibrary(final @NotNull Library library) {
         final Set<String> urls = new LinkedHashSet<>(requireNonNull(library, "library").getUrls());
         final boolean snapshot = library.getVersion().endsWith("-SNAPSHOT");
+        final Set<String> repos = new HashSet<>();
+        repos.addAll(library.getRepositories());
+        repos.addAll(getRepositories());
 
         if (!snapshot) {
-            // Try from library-declared repos first
-            for (final String repository : library.getRepositories()) {
-                urls.add(repository + library.getPath());
-            }
-
-            for (final String repository : getRepositories()) {
+            for (final String repository : repos) {
                 urls.add(repository + library.getPath());
             }
         } else {
@@ -300,10 +329,11 @@ public abstract class LibraryManager {
             final String pathv2 = library.getPath().substring(0, library.getGAV().length()) + "/maven-metadata.xml";
             final String pathv3 = library.getPath().substring(0, library.getGAV().length());
             try {
-                for (final String repository : library.getRepositories()) {
-                    final HttpResponse<InputStream> response = HttpClient.newHttpClient().send(
+                for (final String repository : repos) {
+                    final HttpResponse<InputStream> response = HTTP_CLIENT.send(
                             HttpRequest.newBuilder()
                                     .GET()
+                                    .header("User-Agent", "powercasgamer/libby")
                                     .uri(URI.create(repository + pathv2))
                                     .build(), HttpResponse.BodyHandlers.ofInputStream());
                     if (response.statusCode() != 200) continue;
@@ -312,20 +342,6 @@ public abstract class LibraryManager {
                     final Snapshot snapshat = versioning.getSnapshot();
                     urls.add(repository + pathv3 + "/" + library.getArtifactId() + "-" + library.getVersion().replace("-SNAPSHOT", "") + "-" + snapshat.getTimestamp() + "-" + snapshat.getBuildNumber() + ".jar");
                 }
-
-                for (final String repository : getRepositories()) {
-                    final HttpResponse<InputStream> response = HttpClient.newHttpClient().send(
-                            HttpRequest.newBuilder()
-                                    .GET()
-                                    .uri(URI.create(repository + pathv2))
-                                    .build(), HttpResponse.BodyHandlers.ofInputStream());
-                    if (response.statusCode() != 200) continue;
-                    final Metadata metadata = reader.read(response.body());
-                    final Versioning versioning = metadata.getVersioning();
-                    final Snapshot snapshat = versioning.getSnapshot();
-                    urls.add(repository + pathv3 + "/" + library.getArtifactId() + "-" + library.getVersion().replace("-SNAPSHOT", "") + "-" + snapshat.getTimestamp() + "-" + snapshat.getBuildNumber() + ".jar");
-                }
-
             } catch (final Exception exc) {
                 throw new RuntimeException(exc);
             }
@@ -340,15 +356,16 @@ public abstract class LibraryManager {
      * @param url the URL to the library jar
      * @return downloaded jar as byte array or null if nothing was downloaded
      */
-    private byte[] downloadLibrary(@NotNull final String url) {
+    private byte[] downloadLibrary(final @NotNull String url) {
         try {
-            final URLConnection connection = new URL(requireNonNull(url, "url")).openConnection();
+            final HttpResponse<InputStream> input = HTTP_CLIENT.send(HttpRequest.newBuilder()
+                    .GET()
+                    .header("User-Agent", "powercasgamer/libby")
+                    .uri(URI.create(url))
+                    .timeout(Duration.ofMillis(5000))
+                    .build(), HttpResponse.BodyHandlers.ofInputStream());
 
-            connection.setConnectTimeout(5000);
-            connection.setReadTimeout(5000);
-            connection.setRequestProperty("User-Agent", "powercasgamer/libby");
-
-            try (final InputStream in = connection.getInputStream()) {
+            try (final InputStream in = input.body()) {
                 int len;
                 final byte[] buf = new byte[8192];
                 final ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -358,11 +375,11 @@ public abstract class LibraryManager {
                         out.write(buf, 0, len);
                     }
                 } catch (final SocketTimeoutException e) {
-                    this.logger.warn("Download timed out: " + connection.getURL(), e);
+                    this.logger.warn("Download timed out: " + input.uri(), e);
                     return null;
                 }
 
-                this.logger.info("Downloaded library " + connection.getURL());
+                this.logger.info("Downloaded library " + input.uri());
                 return out.toByteArray();
             }
         } catch (final MalformedURLException e) {
@@ -377,8 +394,9 @@ public abstract class LibraryManager {
             } else {
                 this.logger.debug("Unexpected IOException", e);
             }
-
             return null;
+        } catch (final InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -404,7 +422,7 @@ public abstract class LibraryManager {
      * @return local file path to library
      * @see #loadLibrary(Library)
      */
-    public @UnknownNullability Path downloadLibrary(@NotNull final Library library) {
+    public @UnknownNullability Path downloadLibrary(final @NotNull Library library) {
         final Path file = this.saveDirectory.resolve(requireNonNull(library, "library").getPath());
         if (Files.exists(file)) {
             return file;
@@ -480,7 +498,7 @@ public abstract class LibraryManager {
      * @return the relocated file
      * @see RelocationHelper#relocate(Path, Path, Collection)
      */
-    private @NotNull Path relocate(@NotNull final Path in, @NotNull final String out, @NotNull final Collection<@Nullable Relocation> relocations) {
+    private @NotNull Path relocate(final @NotNull Path in, final @NotNull String out, final @NotNull Collection<@Nullable Relocation> relocations) {
         requireNonNull(in, "in");
         requireNonNull(out, "out");
         requireNonNull(relocations, "relocations");
@@ -526,7 +544,7 @@ public abstract class LibraryManager {
      * @param library the library to load
      * @see #downloadLibrary(Library)
      */
-    public void loadLibrary(@NotNull final Library library) {
+    public void loadLibrary(final @NotNull Library library) {
         Path file = downloadLibrary(requireNonNull(library, "library"));
         if (library.hasRelocations()) {
             file = relocate(file, library.getRelocatedPath(), library.getRelocations());
@@ -551,7 +569,7 @@ public abstract class LibraryManager {
      * @since 2.0.1
      */
     @ApiStatus.AvailableSince("2.0.1")
-    public void loadLibraries(@NotNull final Collection<Library> libraries) {
+    public void loadLibraries(final @NotNull Collection<? extends Library> libraries) {
         for (final Library library : libraries) {
             loadLibrary(library);
         }
@@ -569,7 +587,7 @@ public abstract class LibraryManager {
      * @since 2.0.1
      */
     @ApiStatus.AvailableSince("2.0.1")
-    public void loadLibraries(@NotNull final Library... libraries) {
+    public void loadLibraries(final @NotNull Library... libraries) {
         for (final Library library : libraries) {
             loadLibrary(library);
         }

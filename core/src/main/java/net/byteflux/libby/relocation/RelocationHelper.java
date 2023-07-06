@@ -1,9 +1,34 @@
+/*
+ * This file is part of Libby, licensed under the MIT License.
+ *
+ * Copyright (c) 2019-2023 Matthew Harris
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package net.byteflux.libby.relocation;
 
 import net.byteflux.libby.Library;
 import net.byteflux.libby.LibraryManager;
 import net.byteflux.libby.Repositories;
 import net.byteflux.libby.classloader.IsolatedClassLoader;
+
+import static java.util.Objects.requireNonNull;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -12,8 +37,6 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * A reflection-based helper for relocating library jars. It automatically
@@ -50,35 +73,35 @@ public class RelocationHelper {
 
         // ObjectWeb ASM Commons
         classLoader.addPath(libraryManager.downloadLibrary(
-            Library.builder()
-                   .groupId("org.ow2.asm")
-                   .artifactId("asm-commons")
-                   .version("9.5")
-                   .checksum("cu7p+6+53o2UY/IN1YSkjO635RUq1MmHv74X3UgRya4=")
-                   .repository(Repositories.MAVEN_CENTRAL)
-                   .build()
+                Library.builder()
+                        .groupId("org.ow2.asm")
+                        .artifactId("asm-commons")
+                        .version("9.5")
+                        .checksum("cu7p+6+53o2UY/IN1YSkjO635RUq1MmHv74X3UgRya4=")
+                        .repository(Repositories.MAVEN_CENTRAL)
+                        .build()
         ));
 
         // ObjectWeb ASM
         classLoader.addPath(libraryManager.downloadLibrary(
-            Library.builder()
-                   .groupId("org.ow2.asm")
-                   .artifactId("asm")
-                   .version("9.5")
-                   .checksum("ti6EtZgHKXUbBFjFNM8TZvcnVCu40VhiEzVoKkYPA1M=")
-                   .repository(Repositories.MAVEN_CENTRAL)
-                   .build()
+                Library.builder()
+                        .groupId("org.ow2.asm")
+                        .artifactId("asm")
+                        .version("9.5")
+                        .checksum("ti6EtZgHKXUbBFjFNM8TZvcnVCu40VhiEzVoKkYPA1M=")
+                        .repository(Repositories.MAVEN_CENTRAL)
+                        .build()
         ));
 
         // Luck's Jar Relocator
         classLoader.addPath(libraryManager.downloadLibrary(
-            Library.builder()
-                   .groupId("me.lucko")
-                   .artifactId("jar-relocator")
-                   .version("1.7")
-                   .checksum("b30RhOF6kHiHl+O5suNLh/+eAr1iOFEFLXhwkHHDu4I=")
-                   .repository(Repositories.MAVEN_CENTRAL)
-                   .build()
+                Library.builder()
+                        .groupId("me.lucko")
+                        .artifactId("jar-relocator")
+                        .version("1.7")
+                        .checksum("b30RhOF6kHiHl+O5suNLh/+eAr1iOFEFLXhwkHHDu4I=")
+                        .repository(Repositories.MAVEN_CENTRAL)
+                        .build()
         ));
 
         try {
@@ -115,10 +138,10 @@ public class RelocationHelper {
             final List<Object> rules = new LinkedList<>();
             for (final Relocation relocation : relocations) {
                 rules.add(this.relocationConstructor.newInstance(
-                    relocation.getPattern(),
-                    relocation.getRelocatedPattern(),
-                    relocation.getIncludes(),
-                    relocation.getExcludes()
+                        relocation.getPattern(),
+                        relocation.getRelocatedPattern(),
+                        relocation.getIncludes(),
+                        relocation.getExcludes()
                 ));
             }
 

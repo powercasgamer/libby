@@ -1,8 +1,10 @@
+plugins {
+    id("libby.common-conventions")
+}
+
 dependencies {
     compileOnly(libs.annotations)
     implementation("org.apache.maven:maven-repository-metadata:3.9.2")
 }
 
-shadowJar {
-    minimize()
-}
+applyJarMetadata("net.byteflux.libby.core")
