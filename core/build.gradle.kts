@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     compileOnly(libs.annotations)
-    implementation("org.apache.maven:maven-repository-metadata:3.9.3")
+    implementation("org.apache.maven:maven-repository-metadata:3.9.6")
 }
 
 applyJarMetadata("net.byteflux.libby.core")
